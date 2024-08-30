@@ -1,0 +1,37 @@
+{
+  "starMindApp": {
+    "idea": {
+      "home": {
+        "title": "Ideas",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Idea",
+        "createOrEditLabel": "Create or edit a Idea",
+        "notFound": "No Ideas found"
+      },
+      "created": "A new Idea is created with identifier {{ param }}",
+      "updated": "A Idea is updated with identifier {{ param }}",
+      "deleted": "A Idea is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Idea {{ id }}?"
+      },
+      "detail": {
+        "title": "Idea"
+      },
+      "id": "ID",
+      "title": "Title",
+      "description": "Description",
+      "status": "Status",
+      "validation": "Validation",
+      "rewardType": "Reward Type",
+      "likes": "Likes",
+      "createdDate": "Created Date",
+      "modifiedDate": "Modified Date",
+      "comments": "Comments",
+      "author": "Author",
+      "ideaCategory": "Idea Category",
+      "assignedReward": "Assigned Reward",
+      "category": "Category",
+      "reward": "Reward"
+    }
+  }
+}

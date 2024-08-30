@@ -1,0 +1,28 @@
+{
+  "starMindApp": {
+    "likeHistory": {
+      "home": {
+        "title": "Like Histories",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Like History",
+        "createOrEditLabel": "Create or edit a Like History",
+        "notFound": "No Like Histories found"
+      },
+      "created": "A new Like History is created with identifier {{ param }}",
+      "updated": "A Like History is updated with identifier {{ param }}",
+      "deleted": "A Like History is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Like History {{ id }}?"
+      },
+      "detail": {
+        "title": "Like History"
+      },
+      "id": "ID",
+      "action": "Action",
+      "actionDate": "Action Date",
+      "oldLikes": "Old Likes",
+      "newLikes": "New Likes",
+      "idea": "Idea"
+    }
+  }
+}

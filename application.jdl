@@ -1,0 +1,92 @@
+enum IdeaStatus {
+  OPEN, IN_PROGRESS, COMPLETED
+}
+
+enum RewardType {
+  BRONZE, ARGENT, OR, PLATINE, DIAMANT, TITANIUM, STARMIND
+}
+
+entity Idea {
+  title String required,
+  description TextBlob required,
+  status IdeaStatus required,
+  validation Boolean,
+  rewardType RewardType,
+  likes String,
+  createdDate ZonedDateTime,
+  modifiedDate ZonedDateTime
+}
+
+entity Category {
+  name String required,
+  description TextBlob,
+  level String required
+}
+
+entity Comment {
+  content TextBlob required,
+  createdDate ZonedDateTime
+}
+
+entity Reward {
+  name String required,
+  description String
+}
+
+entity IdeaHistory {
+  action String required,
+  actionDate ZonedDateTime required,
+  description TextBlob,
+  rewardType RewardType,
+  likes String
+}
+
+entity RewardHistory {
+  action String required,
+  actionDate ZonedDateTime required,
+  description TextBlob
+}
+
+entity LikeHistory {
+  action String required,
+  actionDate ZonedDateTime required,
+  oldLikes String,
+  newLikes String
+}
+
+entity Notification {
+  message String required,
+  type String required,
+  sentDate ZonedDateTime required,
+  read Boolean
+}
+
+entity Attachment {
+  fileName String required,
+  fileType String required,
+  data Blob required
+}
+
+relationship ManyToOne {
+  Idea{author} to User with builtInEntity,  // Ajout de with builtInEntity
+  Idea{ideaCategory} to Category,
+  Idea{assignedReward} to Reward,
+  Comment{relatedIdea} to Idea,
+  Comment{author} to User with builtInEntity,  // Ajout de with builtInEntity
+  IdeaHistory{idea} to Idea,
+  RewardHistory{reward} to Reward,
+  RewardHistory{idea} to Idea,
+  LikeHistory{idea} to Idea,
+  Category{parentCategory} to Category,
+  Notification{user} to User with builtInEntity,  // Ajout de with builtInEntity
+  Attachment{relatedIdea} to Idea
+}
+
+relationship OneToMany {
+  Category{ideas} to Idea,
+  Category{subcategories} to Category{superCategory},
+  Reward{ideas} to Idea,
+  Idea{comments} to Comment
+}
+
+paginate Idea, Category, Comment, Reward, IdeaHistory, RewardHistory, LikeHistory with infinite-scroll

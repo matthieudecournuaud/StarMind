@@ -1,0 +1,29 @@
+{
+  "starMindApp": {
+    "ideaHistory": {
+      "home": {
+        "title": "IdeaHistories",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Idea History",
+        "createOrEditLabel": "Créer ou éditer un Idea History",
+        "notFound": "Aucun Idea History trouvé"
+      },
+      "created": "Un nouveau Idea History a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Idea History avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Idea History avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Idea History {{ id }} ?"
+      },
+      "detail": {
+        "title": "Idea History"
+      },
+      "id": "ID",
+      "action": "Action",
+      "actionDate": "Action Date",
+      "description": "Description",
+      "rewardType": "Reward Type",
+      "likes": "Likes",
+      "idea": "Idea"
+    }
+  }
+}

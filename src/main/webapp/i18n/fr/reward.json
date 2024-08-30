@@ -1,0 +1,26 @@
+{
+  "starMindApp": {
+    "reward": {
+      "home": {
+        "title": "Rewards",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Reward",
+        "createOrEditLabel": "Créer ou éditer un Reward",
+        "notFound": "Aucun Reward trouvé"
+      },
+      "created": "Un nouveau Reward a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Reward avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Reward avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Reward {{ id }} ?"
+      },
+      "detail": {
+        "title": "Reward"
+      },
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "ideas": "Ideas"
+    }
+  }
+}

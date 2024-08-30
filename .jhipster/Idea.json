@@ -1,0 +1,76 @@
+{
+  "annotations": {
+    "changelogDate": "20240830123912"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "IdeaStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "OPEN,IN_PROGRESS,COMPLETED"
+    },
+    {
+      "fieldName": "validation",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "rewardType",
+      "fieldType": "RewardType",
+      "fieldValues": "BRONZE,ARGENT,OR,PLATINE,DIAMANT,TITANIUM,STARMIND"
+    },
+    {
+      "fieldName": "likes",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "modifiedDate",
+      "fieldType": "ZonedDateTime"
+    }
+  ],
+  "name": "Idea",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "comment",
+      "relationshipName": "comments",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "user",
+      "relationshipName": "author",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "category",
+      "relationshipName": "ideaCategory",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "reward",
+      "relationshipName": "assignedReward",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

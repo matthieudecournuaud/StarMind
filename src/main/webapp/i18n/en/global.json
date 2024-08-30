@@ -8,7 +8,15 @@
       "entities": {
         "main": "Entities",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
-        "adminAuthority": "Authority"
+        "idea": "Idea",
+        "category": "Category",
+        "comment": "Comment",
+        "reward": "Reward",
+        "ideaHistory": "Idea History",
+        "rewardHistory": "Reward History",
+        "likeHistory": "Like History",
+        "notification": "Notification",
+        "attachment": "Attachment"
       },
       "account": {
         "main": "Account",

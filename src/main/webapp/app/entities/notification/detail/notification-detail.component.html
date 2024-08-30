@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (notification(); as notificationRef) {
+      <div>
+        <h2 data-cy="notificationDetailsHeading"><span jhiTranslate="starMindApp.notification.detail.title">Notification</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ notificationRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.notification.message">Message</span></dt>
+          <dd>
+            <span>{{ notificationRef.message }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.notification.type">Type</span></dt>
+          <dd>
+            <span>{{ notificationRef.type }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.notification.sentDate">Sent Date</span></dt>
+          <dd>
+            <span>{{ notificationRef.sentDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.notification.read">Read</span></dt>
+          <dd>
+            <span>{{ notificationRef.read }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.notification.user">User</span></dt>
+          <dd>
+            <span>{{ notificationRef.user?.id }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/notification', notificationRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,228 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-idea-heading" data-cy="IdeaCreateUpdateHeading" jhiTranslate="starMindApp.idea.home.createOrEditLabel">
+        Créer ou éditer un Idea
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="starMindApp.idea.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let titleRef = editForm.get('title')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_title" jhiTranslate="starMindApp.idea.title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+          @if (titleRef.invalid && (titleRef.dirty || titleRef.touched)) {
+            <div>
+              @if (editForm.get('title')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let descriptionRef = editForm.get('description')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_description" jhiTranslate="starMindApp.idea.description">Description</label>
+          <textarea
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          ></textarea>
+          @if (descriptionRef.invalid && (descriptionRef.dirty || descriptionRef.touched)) {
+            <div>
+              @if (editForm.get('description')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let statusRef = editForm.get('status')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_status" jhiTranslate="starMindApp.idea.status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null">{{ 'starMindApp.IdeaStatus.null' | translate }}</option>
+            @for (ideaStatus of ideaStatusValues; track $index) {
+              <option [value]="ideaStatus">{{ 'starMindApp.IdeaStatus.' + ideaStatus | translate }}</option>
+            }
+          </select>
+          @if (statusRef.invalid && (statusRef.dirty || statusRef.touched)) {
+            <div>
+              @if (editForm.get('status')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_validation" jhiTranslate="starMindApp.idea.validation">Validation</label>
+          <input
+            type="checkbox"
+            class="form-check"
+            name="validation"
+            id="field_validation"
+            data-cy="validation"
+            formControlName="validation"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_rewardType" jhiTranslate="starMindApp.idea.rewardType">Reward Type</label>
+          <select class="form-control" name="rewardType" formControlName="rewardType" id="field_rewardType" data-cy="rewardType">
+            <option [ngValue]="null">{{ 'starMindApp.RewardType.null' | translate }}</option>
+            @for (rewardType of rewardTypeValues; track $index) {
+              <option [value]="rewardType">{{ 'starMindApp.RewardType.' + rewardType | translate }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_likes" jhiTranslate="starMindApp.idea.likes">Likes</label>
+          <input type="text" class="form-control" name="likes" id="field_likes" data-cy="likes" formControlName="likes" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_createdDate" jhiTranslate="starMindApp.idea.createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_modifiedDate" jhiTranslate="starMindApp.idea.modifiedDate">Modified Date</label>
+          <div class="d-flex">
+            <input
+              id="field_modifiedDate"
+              data-cy="modifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="modifiedDate"
+              formControlName="modifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_author" jhiTranslate="starMindApp.idea.author">Author</label>
+          <select
+            class="form-control"
+            id="field_author"
+            data-cy="author"
+            name="author"
+            formControlName="author"
+            [compareWith]="compareUser"
+          >
+            <option [ngValue]="null"></option>
+            @for (userOption of usersSharedCollection; track $index) {
+              <option [ngValue]="userOption">{{ userOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_ideaCategory" jhiTranslate="starMindApp.idea.ideaCategory">Idea Category</label>
+          <select
+            class="form-control"
+            id="field_ideaCategory"
+            data-cy="ideaCategory"
+            name="ideaCategory"
+            formControlName="ideaCategory"
+            [compareWith]="compareCategory"
+          >
+            <option [ngValue]="null"></option>
+            @for (categoryOption of categoriesSharedCollection; track $index) {
+              <option [ngValue]="categoryOption">{{ categoryOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_assignedReward" jhiTranslate="starMindApp.idea.assignedReward">Assigned Reward</label>
+          <select
+            class="form-control"
+            id="field_assignedReward"
+            data-cy="assignedReward"
+            name="assignedReward"
+            formControlName="assignedReward"
+            [compareWith]="compareReward"
+          >
+            <option [ngValue]="null"></option>
+            @for (rewardOption of rewardsSharedCollection; track $index) {
+              <option [ngValue]="rewardOption">{{ rewardOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_category" jhiTranslate="starMindApp.idea.category">Category</label>
+          <select
+            class="form-control"
+            id="field_category"
+            data-cy="category"
+            name="category"
+            formControlName="category"
+            [compareWith]="compareCategory"
+          >
+            <option [ngValue]="null"></option>
+            @for (categoryOption of categoriesSharedCollection; track $index) {
+              <option [ngValue]="categoryOption">{{ categoryOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_reward" jhiTranslate="starMindApp.idea.reward">Reward</label>
+          <select
+            class="form-control"
+            id="field_reward"
+            data-cy="reward"
+            name="reward"
+            formControlName="reward"
+            [compareWith]="compareReward"
+          >
+            <option [ngValue]="null"></option>
+            @for (rewardOption of rewardsSharedCollection; track $index) {
+              <option [ngValue]="rewardOption">{{ rewardOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Annuler</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Sauvegarder</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

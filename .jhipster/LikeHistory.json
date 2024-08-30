@@ -1,0 +1,37 @@
+{
+  "annotations": {
+    "changelogDate": "20240830123918"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "action",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "actionDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "oldLikes",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "newLikes",
+      "fieldType": "String"
+    }
+  ],
+  "name": "LikeHistory",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "idea",
+      "relationshipName": "idea",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

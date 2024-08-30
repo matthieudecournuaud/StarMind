@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (likeHistory(); as likeHistoryRef) {
+      <div>
+        <h2 data-cy="likeHistoryDetailsHeading"><span jhiTranslate="starMindApp.likeHistory.detail.title">Like History</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ likeHistoryRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.likeHistory.action">Action</span></dt>
+          <dd>
+            <span>{{ likeHistoryRef.action }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.likeHistory.actionDate">Action Date</span></dt>
+          <dd>
+            <span>{{ likeHistoryRef.actionDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.likeHistory.oldLikes">Old Likes</span></dt>
+          <dd>
+            <span>{{ likeHistoryRef.oldLikes }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.likeHistory.newLikes">New Likes</span></dt>
+          <dd>
+            <span>{{ likeHistoryRef.newLikes }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.likeHistory.idea">Idea</span></dt>
+          <dd>
+            @if (likeHistory()!.idea) {
+              <div>
+                <a [routerLink]="['/idea', likeHistory()!.idea?.id, 'view']">{{ likeHistoryRef.idea?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/like-history', likeHistoryRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,28 @@
+{
+  "annotations": {
+    "changelogDate": "20240830123915"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Reward",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "idea",
+      "relationshipName": "ideas",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no"
+}

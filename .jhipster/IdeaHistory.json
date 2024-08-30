@@ -1,0 +1,43 @@
+{
+  "annotations": {
+    "changelogDate": "20240830123916"
+  },
+  "applications": "*",
+  "fields": [
+    {
+      "fieldName": "action",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "actionDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "rewardType",
+      "fieldType": "RewardType",
+      "fieldValues": "BRONZE,ARGENT,OR,PLATINE,DIAMANT,TITANIUM,STARMIND"
+    },
+    {
+      "fieldName": "likes",
+      "fieldType": "String"
+    }
+  ],
+  "name": "IdeaHistory",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "idea",
+      "relationshipName": "idea",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no"
+}

@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (rewardHistory(); as rewardHistoryRef) {
+      <div>
+        <h2 data-cy="rewardHistoryDetailsHeading"><span jhiTranslate="starMindApp.rewardHistory.detail.title">Reward History</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ rewardHistoryRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.rewardHistory.action">Action</span></dt>
+          <dd>
+            <span>{{ rewardHistoryRef.action }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.rewardHistory.actionDate">Action Date</span></dt>
+          <dd>
+            <span>{{ rewardHistoryRef.actionDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.rewardHistory.description">Description</span></dt>
+          <dd>
+            <span>{{ rewardHistoryRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.rewardHistory.reward">Reward</span></dt>
+          <dd>
+            @if (rewardHistory()!.reward) {
+              <div>
+                <a [routerLink]="['/reward', rewardHistory()!.reward?.id, 'view']">{{ rewardHistoryRef.reward?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="starMindApp.rewardHistory.idea">Idea</span></dt>
+          <dd>
+            @if (rewardHistory()!.idea) {
+              <div>
+                <a [routerLink]="['/idea', rewardHistory()!.idea?.id, 'view']">{{ rewardHistoryRef.idea?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/reward-history', rewardHistoryRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

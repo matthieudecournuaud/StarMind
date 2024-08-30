@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (comment(); as commentRef) {
+      <div>
+        <h2 data-cy="commentDetailsHeading"><span jhiTranslate="starMindApp.comment.detail.title">Comment</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ commentRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.comment.content">Content</span></dt>
+          <dd>
+            <span>{{ commentRef.content }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.comment.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ commentRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.comment.relatedIdea">Related Idea</span></dt>
+          <dd>
+            @if (comment()!.relatedIdea) {
+              <div>
+                <a [routerLink]="['/idea', comment()!.relatedIdea?.id, 'view']">{{ commentRef.relatedIdea?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="starMindApp.comment.author">Author</span></dt>
+          <dd>
+            <span>{{ commentRef.author?.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.comment.idea">Idea</span></dt>
+          <dd>
+            @if (comment()!.idea) {
+              <div>
+                <a [routerLink]="['/idea', comment()!.idea?.id, 'view']">{{ commentRef.idea?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/comment', commentRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

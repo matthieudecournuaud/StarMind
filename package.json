@@ -89,6 +89,7 @@
     "@ngx-translate/http-loader": "8.0.0",
     "@popperjs/core": "2.11.8",
     "@stomp/rx-stomp": "2.0.0",
+    "angular-oauth2-oidc": "^17.0.2",
     "bootstrap": "5.3.3",
     "bootswatch": "5.3.3",
     "dayjs": "1.11.13",

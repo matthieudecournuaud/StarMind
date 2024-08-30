@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Idea.
+    -->
+    <changeSet id="20240830123912-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="idea"
+                                 constraintName="fk_idea__author_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="idea_category_id"
+                                 baseTableName="idea"
+                                 constraintName="fk_idea__idea_category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="category"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="assigned_reward_id"
+                                 baseTableName="idea"
+                                 constraintName="fk_idea__assigned_reward_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="reward"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="category_id"
+                                 baseTableName="idea"
+                                 constraintName="fk_idea__category_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="category"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="reward_id"
+                                 baseTableName="idea"
+                                 constraintName="fk_idea__reward_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="reward"
+                                 />
+    </changeSet>
+</databaseChangeLog>

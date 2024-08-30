@@ -1,0 +1,28 @@
+{
+  "starMindApp": {
+    "rewardHistory": {
+      "home": {
+        "title": "Reward Histories",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Reward History",
+        "createOrEditLabel": "Create or edit a Reward History",
+        "notFound": "No Reward Histories found"
+      },
+      "created": "A new Reward History is created with identifier {{ param }}",
+      "updated": "A Reward History is updated with identifier {{ param }}",
+      "deleted": "A Reward History is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Reward History {{ id }}?"
+      },
+      "detail": {
+        "title": "Reward History"
+      },
+      "id": "ID",
+      "action": "Action",
+      "actionDate": "Action Date",
+      "description": "Description",
+      "reward": "Reward",
+      "idea": "Idea"
+    }
+  }
+}

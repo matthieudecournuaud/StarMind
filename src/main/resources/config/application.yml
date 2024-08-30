@@ -144,12 +144,14 @@ spring:
       client:
         provider:
           oidc:
-            issuer-uri: http://localhost:9080/realms/jhipster
+            issuer-uri: https://dev-25887789.okta.com/oauth2/default
         registration:
           oidc:
-            client-id: web_app
-            client-secret: web_app
+            client-authentication-method: none
+            authorization-grant-type: authorization_code
+            client-id: 0oajbmuygeEoKopRv5d7
             scope: openid, profile, email, offline_access # last one for refresh tokens
+            redirect-uri: 'http://localhost:8080/login/oauth2/code/oidc'
   task:
     execution:
       thread-name-prefix: star-mind-task-

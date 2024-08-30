@@ -1,0 +1,218 @@
+<div>
+  <h2 id="page-heading" data-cy="IdeaHeading">
+    <span jhiTranslate="starMindApp.idea.home.title">Ideas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="starMindApp.idea.home.refreshListLabel">Actualiser la liste</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-idea"
+        [routerLink]="['/idea/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="starMindApp.idea.home.createLabel">Créer un nouveau Idea</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  @if (ideas?.length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="starMindApp.idea.home.notFound">Aucun Idea trouvé</span>
+    </div>
+  }
+
+  @if (ideas && ideas.length > 0) {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [sortState]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="title">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.title">Title</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.description">Description</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="status">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.status">Status</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="validation">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.validation">Validation</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="rewardType">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.rewardType">Reward Type</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="likes">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.likes">Likes</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="modifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.modifiedDate">Modified Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="author.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.author">Author</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="ideaCategory.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.ideaCategory">Idea Category</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="assignedReward.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.assignedReward">Assigned Reward</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="category.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.category">Category</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="reward.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.reward">Reward</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
+          @for (idea of ideas; track trackId) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/idea', idea.id, 'view']">{{ idea.id }}</a>
+              </td>
+              <td>{{ idea.title }}</td>
+              <td>{{ idea.description }}</td>
+              <td [jhiTranslate]="'starMindApp.IdeaStatus.' + (idea.status ?? 'null')">
+                {{ { null: '', OPEN: 'OPEN', IN_PROGRESS: 'IN_PROGRESS', COMPLETED: 'COMPLETED' }[idea.status ?? 'null'] }}
+              </td>
+              <td>{{ idea.validation }}</td>
+              <td [jhiTranslate]="'starMindApp.RewardType.' + (idea.rewardType ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    BRONZE: 'BRONZE',
+                    ARGENT: 'ARGENT',
+                    OR: 'OR',
+                    PLATINE: 'PLATINE',
+                    DIAMANT: 'DIAMANT',
+                    TITANIUM: 'TITANIUM',
+                    STARMIND: 'STARMIND',
+                  }[idea.rewardType ?? 'null']
+                }}
+              </td>
+              <td>{{ idea.likes }}</td>
+              <td>{{ idea.createdDate | formatMediumDatetime }}</td>
+              <td>{{ idea.modifiedDate | formatMediumDatetime }}</td>
+              <td>
+                {{ idea.author?.id }}
+              </td>
+              <td>
+                @if (idea.ideaCategory) {
+                  <div>
+                    <a [routerLink]="['/category', idea.ideaCategory.id, 'view']">{{ idea.ideaCategory.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (idea.assignedReward) {
+                  <div>
+                    <a [routerLink]="['/reward', idea.assignedReward.id, 'view']">{{ idea.assignedReward.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (idea.category) {
+                  <div>
+                    <a [routerLink]="['/category', idea.category.id, 'view']">{{ idea.category.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (idea.reward) {
+                  <div>
+                    <a [routerLink]="['/reward', idea.reward.id, 'view']">{{ idea.reward.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/idea', idea.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Voir</span>
+                  </a>
+
+                  <a [routerLink]="['/idea', idea.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editer</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(idea)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Supprimer</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

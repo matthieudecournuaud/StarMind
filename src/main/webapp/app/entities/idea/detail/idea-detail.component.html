@@ -1,0 +1,111 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (idea(); as ideaRef) {
+      <div>
+        <h2 data-cy="ideaDetailsHeading"><span jhiTranslate="starMindApp.idea.detail.title">Idea</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ ideaRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.title">Title</span></dt>
+          <dd>
+            <span>{{ ideaRef.title }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.description">Description</span></dt>
+          <dd>
+            <span>{{ ideaRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.status">Status</span></dt>
+          <dd>
+            <span [jhiTranslate]="'starMindApp.IdeaStatus.' + (ideaRef.status ?? 'null')">{{
+              { null: '', OPEN: 'OPEN', IN_PROGRESS: 'IN_PROGRESS', COMPLETED: 'COMPLETED' }[ideaRef.status ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.validation">Validation</span></dt>
+          <dd>
+            <span>{{ ideaRef.validation }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.rewardType">Reward Type</span></dt>
+          <dd>
+            <span [jhiTranslate]="'starMindApp.RewardType.' + (ideaRef.rewardType ?? 'null')">{{
+              {
+                null: '',
+                BRONZE: 'BRONZE',
+                ARGENT: 'ARGENT',
+                OR: 'OR',
+                PLATINE: 'PLATINE',
+                DIAMANT: 'DIAMANT',
+                TITANIUM: 'TITANIUM',
+                STARMIND: 'STARMIND',
+              }[ideaRef.rewardType ?? 'null']
+            }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.likes">Likes</span></dt>
+          <dd>
+            <span>{{ ideaRef.likes }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ ideaRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.modifiedDate">Modified Date</span></dt>
+          <dd>
+            <span>{{ ideaRef.modifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.author">Author</span></dt>
+          <dd>
+            <span>{{ ideaRef.author?.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.ideaCategory">Idea Category</span></dt>
+          <dd>
+            @if (idea()!.ideaCategory) {
+              <div>
+                <a [routerLink]="['/category', idea()!.ideaCategory?.id, 'view']">{{ ideaRef.ideaCategory?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.assignedReward">Assigned Reward</span></dt>
+          <dd>
+            @if (idea()!.assignedReward) {
+              <div>
+                <a [routerLink]="['/reward', idea()!.assignedReward?.id, 'view']">{{ ideaRef.assignedReward?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.category">Category</span></dt>
+          <dd>
+            @if (idea()!.category) {
+              <div>
+                <a [routerLink]="['/category', idea()!.category?.id, 'view']">{{ ideaRef.category?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.reward">Reward</span></dt>
+          <dd>
+            @if (idea()!.reward) {
+              <div>
+                <a [routerLink]="['/reward', idea()!.reward?.id, 'view']">{{ ideaRef.reward?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/idea', ideaRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>
