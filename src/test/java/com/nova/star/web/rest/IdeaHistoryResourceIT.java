@@ -14,6 +14,8 @@ import com.nova.star.IntegrationTest;
 import com.nova.star.domain.IdeaHistory;
 import com.nova.star.domain.enumeration.RewardType;
 import com.nova.star.repository.IdeaHistoryRepository;
+import com.nova.star.service.dto.IdeaHistoryDTO;
+import com.nova.star.service.mapper.IdeaHistoryMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -51,8 +53,8 @@ class IdeaHistoryResourceIT {
     private static final RewardType DEFAULT_REWARD_TYPE = RewardType.BRONZE;
     private static final RewardType UPDATED_REWARD_TYPE = RewardType.ARGENT;
 
-    private static final String DEFAULT_LIKES = "AAAAAAAAAA";
-    private static final String UPDATED_LIKES = "BBBBBBBBBB";
+    private static final Integer DEFAULT_LIKES = 1;
+    private static final Integer UPDATED_LIKES = 2;
 
     private static final String ENTITY_API_URL = "/api/idea-histories";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -65,6 +67,9 @@ class IdeaHistoryResourceIT {
 
     @Autowired
     private IdeaHistoryRepository ideaHistoryRepository;
+
+    @Autowired
+    private IdeaHistoryMapper ideaHistoryMapper;
 
     @Autowired
     private EntityManager em;
@@ -124,20 +129,22 @@ class IdeaHistoryResourceIT {
     void createIdeaHistory() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the IdeaHistory
-        var returnedIdeaHistory = om.readValue(
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
+        var returnedIdeaHistoryDTO = om.readValue(
             restIdeaHistoryMockMvc
                 .perform(
-                    post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistory))
+                    post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistoryDTO))
                 )
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            IdeaHistory.class
+            IdeaHistoryDTO.class
         );
 
         // Validate the IdeaHistory in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedIdeaHistory = ideaHistoryMapper.toEntity(returnedIdeaHistoryDTO);
         assertIdeaHistoryUpdatableFieldsEquals(returnedIdeaHistory, getPersistedIdeaHistory(returnedIdeaHistory));
 
         insertedIdeaHistory = returnedIdeaHistory;
@@ -148,12 +155,15 @@ class IdeaHistoryResourceIT {
     void createIdeaHistoryWithExistingId() throws Exception {
         // Create the IdeaHistory with an existing ID
         ideaHistory.setId(1L);
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restIdeaHistoryMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistory)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the IdeaHistory in the database
@@ -168,9 +178,12 @@ class IdeaHistoryResourceIT {
         ideaHistory.setAction(null);
 
         // Create the IdeaHistory, which fails.
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
 
         restIdeaHistoryMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistory)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -184,9 +197,12 @@ class IdeaHistoryResourceIT {
         ideaHistory.setActionDate(null);
 
         // Create the IdeaHistory, which fails.
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
 
         restIdeaHistoryMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistory)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -255,13 +271,14 @@ class IdeaHistoryResourceIT {
             .description(UPDATED_DESCRIPTION)
             .rewardType(UPDATED_REWARD_TYPE)
             .likes(UPDATED_LIKES);
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(updatedIdeaHistory);
 
         restIdeaHistoryMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedIdeaHistory.getId())
+                put(ENTITY_API_URL_ID, ideaHistoryDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(updatedIdeaHistory))
+                    .content(om.writeValueAsBytes(ideaHistoryDTO))
             )
             .andExpect(status().isOk());
 
@@ -276,13 +293,16 @@ class IdeaHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         ideaHistory.setId(longCount.incrementAndGet());
 
+        // Create the IdeaHistory
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIdeaHistoryMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, ideaHistory.getId())
+                put(ENTITY_API_URL_ID, ideaHistoryDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(ideaHistory))
+                    .content(om.writeValueAsBytes(ideaHistoryDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -296,13 +316,16 @@ class IdeaHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         ideaHistory.setId(longCount.incrementAndGet());
 
+        // Create the IdeaHistory
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIdeaHistoryMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(ideaHistory))
+                    .content(om.writeValueAsBytes(ideaHistoryDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -316,9 +339,12 @@ class IdeaHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         ideaHistory.setId(longCount.incrementAndGet());
 
+        // Create the IdeaHistory
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIdeaHistoryMockMvc
-            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistory)))
+            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaHistoryDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the IdeaHistory in the database
@@ -336,8 +362,6 @@ class IdeaHistoryResourceIT {
         // Update the ideaHistory using partial update
         IdeaHistory partialUpdatedIdeaHistory = new IdeaHistory();
         partialUpdatedIdeaHistory.setId(ideaHistory.getId());
-
-        partialUpdatedIdeaHistory.actionDate(UPDATED_ACTION_DATE);
 
         restIdeaHistoryMockMvc
             .perform(
@@ -397,13 +421,16 @@ class IdeaHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         ideaHistory.setId(longCount.incrementAndGet());
 
+        // Create the IdeaHistory
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIdeaHistoryMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, ideaHistory.getId())
+                patch(ENTITY_API_URL_ID, ideaHistoryDTO.getId())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(ideaHistory))
+                    .content(om.writeValueAsBytes(ideaHistoryDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -417,13 +444,16 @@ class IdeaHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         ideaHistory.setId(longCount.incrementAndGet());
 
+        // Create the IdeaHistory
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIdeaHistoryMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(ideaHistory))
+                    .content(om.writeValueAsBytes(ideaHistoryDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -437,10 +467,13 @@ class IdeaHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         ideaHistory.setId(longCount.incrementAndGet());
 
+        // Create the IdeaHistory
+        IdeaHistoryDTO ideaHistoryDTO = ideaHistoryMapper.toDto(ideaHistory);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIdeaHistoryMockMvc
             .perform(
-                patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(ideaHistory))
+                patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(ideaHistoryDTO))
             )
             .andExpect(status().isMethodNotAllowed());
 

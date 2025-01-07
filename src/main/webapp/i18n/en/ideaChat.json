@@ -1,0 +1,26 @@
+{
+  "starMindApp": {
+    "ideaChat": {
+      "home": {
+        "title": "Idea Chats",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Idea Chat",
+        "createOrEditLabel": "Create or edit a Idea Chat",
+        "notFound": "No Idea Chats found"
+      },
+      "created": "A new Idea Chat is created with identifier {{ param }}",
+      "updated": "A Idea Chat is updated with identifier {{ param }}",
+      "deleted": "A Idea Chat is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Idea Chat {{ id }}?"
+      },
+      "detail": {
+        "title": "Idea Chat"
+      },
+      "id": "ID",
+      "name": "Name",
+      "messages": "Messages",
+      "users": "Users"
+    }
+  }
+}

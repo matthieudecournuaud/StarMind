@@ -1,0 +1,135 @@
+<div>
+  <h2 id="page-heading" data-cy="ProspectEntryHeading">
+    <span jhiTranslate="starMindApp.prospectEntry.home.title">ProspectEntries</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="starMindApp.prospectEntry.home.refreshListLabel">Actualiser la liste</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-prospect-entry"
+        [routerLink]="['/prospect-entry/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="starMindApp.prospectEntry.home.createLabel">Créer un nouveau Prospect Entry</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  @if (prospectEntries?.length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="starMindApp.prospectEntry.home.notFound">Aucun Prospect Entry trouvé</span>
+    </div>
+  }
+
+  @if (prospectEntries && prospectEntries.length > 0) {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [sortState]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="status">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.prospectEntry.status">Status</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.prospectEntry.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="modifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.prospectEntry.modifiedDate">Modified Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="prospect.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.prospectEntry.prospect">Prospect</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="prospectBoard.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.prospectEntry.prospectBoard">Prospect Board</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
+          @for (prospectEntry of prospectEntries; track trackId(prospectEntry)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/prospect-entry', prospectEntry.id, 'view']">{{ prospectEntry.id }}</a>
+              </td>
+              <td [jhiTranslate]="'starMindApp.ProspectStatus.' + (prospectEntry.status ?? 'null')">
+                {{
+                  {
+                    null: '',
+                    NEW: 'NEW',
+                    CONTACTED: 'CONTACTED',
+                    INTERVIEW_SCHEDULED: 'INTERVIEW_SCHEDULED',
+                    HIRED: 'HIRED',
+                    REJECTED: 'REJECTED',
+                  }[prospectEntry.status ?? 'null']
+                }}
+              </td>
+              <td>{{ prospectEntry.createdDate | formatMediumDatetime }}</td>
+              <td>{{ prospectEntry.modifiedDate | formatMediumDatetime }}</td>
+              <td>
+                {{ prospectEntry.prospect?.id }}
+              </td>
+              <td>
+                @if (prospectEntry.prospectBoard) {
+                  <div>
+                    <a [routerLink]="['/prospect-board', prospectEntry.prospectBoard.id, 'view']">{{ prospectEntry.prospectBoard.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/prospect-entry', prospectEntry.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Voir</span>
+                  </a>
+
+                  <a [routerLink]="['/prospect-entry', prospectEntry.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editer</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(prospectEntry)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Supprimer</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

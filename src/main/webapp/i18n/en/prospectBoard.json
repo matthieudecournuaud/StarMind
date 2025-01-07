@@ -1,0 +1,29 @@
+{
+  "starMindApp": {
+    "prospectBoard": {
+      "home": {
+        "title": "Prospect Boards",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Prospect Board",
+        "createOrEditLabel": "Create or edit a Prospect Board",
+        "notFound": "No Prospect Boards found"
+      },
+      "created": "A new Prospect Board is created with identifier {{ param }}",
+      "updated": "A Prospect Board is updated with identifier {{ param }}",
+      "deleted": "A Prospect Board is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Prospect Board {{ id }}?"
+      },
+      "detail": {
+        "title": "Prospect Board"
+      },
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "createdDate": "Created Date",
+      "modifiedDate": "Modified Date",
+      "entries": "Entries",
+      "owner": "Owner"
+    }
+  }
+}

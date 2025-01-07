@@ -63,15 +63,15 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="reward.id">
-              <div class="d-flex">
-                <span jhiTranslate="starMindApp.rewardHistory.reward">Reward</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col" jhiSortBy="idea.id">
               <div class="d-flex">
                 <span jhiTranslate="starMindApp.rewardHistory.idea">Idea</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="reward.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.rewardHistory.reward">Reward</span>
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -79,7 +79,7 @@
           </tr>
         </thead>
         <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
-          @for (rewardHistory of rewardHistories; track trackId) {
+          @for (rewardHistory of rewardHistories; track trackId(rewardHistory)) {
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/reward-history', rewardHistory.id, 'view']">{{ rewardHistory.id }}</a>
@@ -88,16 +88,16 @@
               <td>{{ rewardHistory.actionDate | formatMediumDatetime }}</td>
               <td>{{ rewardHistory.description }}</td>
               <td>
-                @if (rewardHistory.reward) {
+                @if (rewardHistory.idea) {
                   <div>
-                    <a [routerLink]="['/reward', rewardHistory.reward.id, 'view']">{{ rewardHistory.reward.id }}</a>
+                    <a [routerLink]="['/idea', rewardHistory.idea.id, 'view']">{{ rewardHistory.idea.id }}</a>
                   </div>
                 }
               </td>
               <td>
-                @if (rewardHistory.idea) {
+                @if (rewardHistory.reward) {
                   <div>
-                    <a [routerLink]="['/idea', rewardHistory.idea.id, 'view']">{{ rewardHistory.idea.id }}</a>
+                    <a [routerLink]="['/reward', rewardHistory.reward.id, 'view']">{{ rewardHistory.reward.id }}</a>
                   </div>
                 }
               </td>

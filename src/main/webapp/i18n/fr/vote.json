@@ -1,0 +1,28 @@
+{
+  "starMindApp": {
+    "vote": {
+      "home": {
+        "title": "Votes",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Vote",
+        "createOrEditLabel": "Créer ou éditer un Vote",
+        "notFound": "Aucun Vote trouvé"
+      },
+      "created": "Un nouveau Vote a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Vote avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Vote avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Vote {{ id }} ?"
+      },
+      "detail": {
+        "title": "Vote"
+      },
+      "id": "ID",
+      "voteOption": "Vote Option",
+      "comment": "Comment",
+      "createdDate": "Created Date",
+      "voter": "Voter",
+      "idea": "Idea"
+    }
+  }
+}

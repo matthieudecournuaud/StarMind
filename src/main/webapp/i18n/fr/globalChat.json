@@ -1,0 +1,26 @@
+{
+  "starMindApp": {
+    "globalChat": {
+      "home": {
+        "title": "GlobalChats",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Global Chat",
+        "createOrEditLabel": "Créer ou éditer un Global Chat",
+        "notFound": "Aucun Global Chat trouvé"
+      },
+      "created": "Un nouveau Global Chat a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Global Chat avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Global Chat avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Global Chat {{ id }} ?"
+      },
+      "detail": {
+        "title": "Global Chat"
+      },
+      "id": "ID",
+      "name": "Name",
+      "messages": "Messages",
+      "users": "Users"
+    }
+  }
+}

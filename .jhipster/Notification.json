@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20240830123919"
+    "changelogDate": "20241209144002"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "message",
@@ -34,5 +35,6 @@
       "relationshipWithBuiltInEntity": true
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }

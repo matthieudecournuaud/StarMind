@@ -1,0 +1,28 @@
+{
+  "starMindApp": {
+    "prospectEntry": {
+      "home": {
+        "title": "Prospect Entries",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Prospect Entry",
+        "createOrEditLabel": "Create or edit a Prospect Entry",
+        "notFound": "No Prospect Entries found"
+      },
+      "created": "A new Prospect Entry is created with identifier {{ param }}",
+      "updated": "A Prospect Entry is updated with identifier {{ param }}",
+      "deleted": "A Prospect Entry is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Prospect Entry {{ id }}?"
+      },
+      "detail": {
+        "title": "Prospect Entry"
+      },
+      "id": "ID",
+      "status": "Status",
+      "createdDate": "Created Date",
+      "modifiedDate": "Modified Date",
+      "prospect": "Prospect",
+      "prospectBoard": "Prospect Board"
+    }
+  }
+}

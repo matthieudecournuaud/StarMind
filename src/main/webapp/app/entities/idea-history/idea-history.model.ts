@@ -8,8 +8,8 @@ export interface IIdeaHistory {
   actionDate?: dayjs.Dayjs | null;
   description?: string | null;
   rewardType?: keyof typeof RewardType | null;
-  likes?: string | null;
-  idea?: IIdea | null;
+  likes?: number | null;
+  idea?: Pick<IIdea, 'id'> | null;
 }
 
 export type NewIdeaHistory = Omit<IIdeaHistory, 'id'> & { id: null };

@@ -43,10 +43,13 @@ public class IdeaHistory implements Serializable {
     private RewardType rewardType;
 
     @Column(name = "likes")
-    private String likes;
+    private Integer likes;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "comments", "author", "ideaCategory", "assignedReward", "category", "reward" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "comments", "votes", "likeHistories", "author", "assignedReward", "manager", "category" },
+        allowSetters = true
+    )
     private Idea idea;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -116,16 +119,16 @@ public class IdeaHistory implements Serializable {
         this.rewardType = rewardType;
     }
 
-    public String getLikes() {
+    public Integer getLikes() {
         return this.likes;
     }
 
-    public IdeaHistory likes(String likes) {
+    public IdeaHistory likes(Integer likes) {
         this.setLikes(likes);
         return this;
     }
 
-    public void setLikes(String likes) {
+    public void setLikes(Integer likes) {
         this.likes = likes;
     }
 
@@ -170,7 +173,7 @@ public class IdeaHistory implements Serializable {
             ", actionDate='" + getActionDate() + "'" +
             ", description='" + getDescription() + "'" +
             ", rewardType='" + getRewardType() + "'" +
-            ", likes='" + getLikes() + "'" +
+            ", likes=" + getLikes() +
             "}";
     }
 }

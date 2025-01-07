@@ -49,10 +49,10 @@ describe('IdeaHistory Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call Idea query and add missing value', () => {
       const ideaHistory: IIdeaHistory = { id: 456 };
-      const idea: IIdea = { id: 15357 };
+      const idea: IIdea = { id: 23266 };
       ideaHistory.idea = idea;
 
-      const ideaCollection: IIdea[] = [{ id: 24369 }];
+      const ideaCollection: IIdea[] = [{ id: 12798 }];
       jest.spyOn(ideaService, 'query').mockReturnValue(of(new HttpResponse({ body: ideaCollection })));
       const additionalIdeas = [idea];
       const expectedCollection: IIdea[] = [...additionalIdeas, ...ideaCollection];
@@ -71,7 +71,7 @@ describe('IdeaHistory Management Update Component', () => {
 
     it('Should update editForm', () => {
       const ideaHistory: IIdeaHistory = { id: 456 };
-      const idea: IIdea = { id: 20874 };
+      const idea: IIdea = { id: 21071 };
       ideaHistory.idea = idea;
 
       activatedRoute.data = of({ ideaHistory });

@@ -67,7 +67,7 @@ public class RewardHistoryAsserts {
     public static void assertRewardHistoryUpdatableRelationshipsEquals(RewardHistory expected, RewardHistory actual) {
         assertThat(expected)
             .as("Verify RewardHistory relationships")
-            .satisfies(e -> assertThat(e.getReward()).as("check reward").isEqualTo(actual.getReward()))
-            .satisfies(e -> assertThat(e.getIdea()).as("check idea").isEqualTo(actual.getIdea()));
+            .satisfies(e -> assertThat(e.getIdea()).as("check idea").isEqualTo(actual.getIdea()))
+            .satisfies(e -> assertThat(e.getReward()).as("check reward").isEqualTo(actual.getReward()));
     }
 }

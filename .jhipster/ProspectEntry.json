@@ -1,0 +1,38 @@
+{
+  "annotations": {
+    "changelogDate": "20241209144001"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "status",
+      "fieldType": "ProspectStatus",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "NEW,CONTACTED,INTERVIEW_SCHEDULED,HIRED,REJECTED"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "modifiedDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "ProspectEntry",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "user",
+      "relationshipName": "prospect",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipWithBuiltInEntity": true
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

@@ -1,0 +1,150 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-prospect-entry-heading"
+        data-cy="ProspectEntryCreateUpdateHeading"
+        jhiTranslate="starMindApp.prospectEntry.home.createOrEditLabel"
+      >
+        Créer ou éditer un Prospect Entry
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="starMindApp.prospectEntry.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let statusRef = editForm.get('status')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_status" jhiTranslate="starMindApp.prospectEntry.status">Status</label>
+          <select class="form-control" name="status" formControlName="status" id="field_status" data-cy="status">
+            <option [ngValue]="null">{{ 'starMindApp.ProspectStatus.null' | translate }}</option>
+            @for (prospectStatus of prospectStatusValues; track $index) {
+              <option [value]="prospectStatus">{{ 'starMindApp.ProspectStatus.' + prospectStatus | translate }}</option>
+            }
+          </select>
+          @if (statusRef.invalid && (statusRef.dirty || statusRef.touched)) {
+            <div>
+              @if (editForm.get('status')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+            </div>
+          }
+        </div>
+
+        @let createdDateRef = editForm.get('createdDate')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_createdDate" jhiTranslate="starMindApp.prospectEntry.createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          @if (createdDateRef.invalid && (createdDateRef.dirty || createdDateRef.touched)) {
+            <div>
+              @if (editForm.get('createdDate')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('createdDate')?.errors?.datetimelocal"
+                jhiTranslate="entity.validation.datetimelocal"
+                >Ce champ doit être une date et une heure.</small
+              >
+            </div>
+          }
+        </div>
+
+        @let modifiedDateRef = editForm.get('modifiedDate')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_modifiedDate" jhiTranslate="starMindApp.prospectEntry.modifiedDate">Modified Date</label>
+          <div class="d-flex">
+            <input
+              id="field_modifiedDate"
+              data-cy="modifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="modifiedDate"
+              formControlName="modifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          @if (modifiedDateRef.invalid && (modifiedDateRef.dirty || modifiedDateRef.touched)) {
+            <div>
+              @if (editForm.get('modifiedDate')?.errors?.required) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
+              }
+              <small
+                class="form-text text-danger"
+                [hidden]="!editForm.get('modifiedDate')?.errors?.datetimelocal"
+                jhiTranslate="entity.validation.datetimelocal"
+                >Ce champ doit être une date et une heure.</small
+              >
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_prospect" jhiTranslate="starMindApp.prospectEntry.prospect">Prospect</label>
+          <select
+            class="form-control"
+            id="field_prospect"
+            data-cy="prospect"
+            name="prospect"
+            formControlName="prospect"
+            [compareWith]="compareUser"
+          >
+            <option [ngValue]="null"></option>
+            @for (userOption of usersSharedCollection; track $index) {
+              <option [ngValue]="userOption">{{ userOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_prospectBoard" jhiTranslate="starMindApp.prospectEntry.prospectBoard">Prospect Board</label>
+          <select
+            class="form-control"
+            id="field_prospectBoard"
+            data-cy="prospectBoard"
+            name="prospectBoard"
+            formControlName="prospectBoard"
+            [compareWith]="compareProspectBoard"
+          >
+            <option [ngValue]="null"></option>
+            @for (prospectBoardOption of prospectBoardsSharedCollection; track $index) {
+              <option [ngValue]="prospectBoardOption">{{ prospectBoardOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Annuler</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Sauvegarder</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

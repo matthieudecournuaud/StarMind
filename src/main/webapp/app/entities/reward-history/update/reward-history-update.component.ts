@@ -10,10 +10,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-import { IReward } from 'app/entities/reward/reward.model';
-import { RewardService } from 'app/entities/reward/service/reward.service';
 import { IIdea } from 'app/entities/idea/idea.model';
 import { IdeaService } from 'app/entities/idea/service/idea.service';
+import { IReward } from 'app/entities/reward/reward.model';
+import { RewardService } from 'app/entities/reward/service/reward.service';
 import { RewardHistoryService } from '../service/reward-history.service';
 import { IRewardHistory } from '../reward-history.model';
 import { RewardHistoryFormGroup, RewardHistoryFormService } from './reward-history-form.service';
@@ -28,23 +28,23 @@ export class RewardHistoryUpdateComponent implements OnInit {
   isSaving = false;
   rewardHistory: IRewardHistory | null = null;
 
-  rewardsSharedCollection: IReward[] = [];
   ideasSharedCollection: IIdea[] = [];
+  rewardsSharedCollection: IReward[] = [];
 
   protected dataUtils = inject(DataUtils);
   protected eventManager = inject(EventManager);
   protected rewardHistoryService = inject(RewardHistoryService);
   protected rewardHistoryFormService = inject(RewardHistoryFormService);
-  protected rewardService = inject(RewardService);
   protected ideaService = inject(IdeaService);
+  protected rewardService = inject(RewardService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: RewardHistoryFormGroup = this.rewardHistoryFormService.createRewardHistoryFormGroup();
 
-  compareReward = (o1: IReward | null, o2: IReward | null): boolean => this.rewardService.compareReward(o1, o2);
-
   compareIdea = (o1: IIdea | null, o2: IIdea | null): boolean => this.ideaService.compareIdea(o1, o2);
+
+  compareReward = (o1: IReward | null, o2: IReward | null): boolean => this.rewardService.compareReward(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ rewardHistory }) => {
@@ -109,24 +109,24 @@ export class RewardHistoryUpdateComponent implements OnInit {
     this.rewardHistory = rewardHistory;
     this.rewardHistoryFormService.resetForm(this.editForm, rewardHistory);
 
+    this.ideasSharedCollection = this.ideaService.addIdeaToCollectionIfMissing<IIdea>(this.ideasSharedCollection, rewardHistory.idea);
     this.rewardsSharedCollection = this.rewardService.addRewardToCollectionIfMissing<IReward>(
       this.rewardsSharedCollection,
       rewardHistory.reward,
     );
-    this.ideasSharedCollection = this.ideaService.addIdeaToCollectionIfMissing<IIdea>(this.ideasSharedCollection, rewardHistory.idea);
   }
 
   protected loadRelationshipsOptions(): void {
-    this.rewardService
-      .query()
-      .pipe(map((res: HttpResponse<IReward[]>) => res.body ?? []))
-      .pipe(map((rewards: IReward[]) => this.rewardService.addRewardToCollectionIfMissing<IReward>(rewards, this.rewardHistory?.reward)))
-      .subscribe((rewards: IReward[]) => (this.rewardsSharedCollection = rewards));
-
     this.ideaService
       .query()
       .pipe(map((res: HttpResponse<IIdea[]>) => res.body ?? []))
       .pipe(map((ideas: IIdea[]) => this.ideaService.addIdeaToCollectionIfMissing<IIdea>(ideas, this.rewardHistory?.idea)))
       .subscribe((ideas: IIdea[]) => (this.ideasSharedCollection = ideas));
+
+    this.rewardService
+      .query()
+      .pipe(map((res: HttpResponse<IReward[]>) => res.body ?? []))
+      .pipe(map((rewards: IReward[]) => this.rewardService.addRewardToCollectionIfMissing<IReward>(rewards, this.rewardHistory?.reward)))
+      .subscribe((rewards: IReward[]) => (this.rewardsSharedCollection = rewards));
   }
 }

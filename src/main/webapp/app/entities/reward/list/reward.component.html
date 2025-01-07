@@ -60,7 +60,7 @@
           </tr>
         </thead>
         <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
-          @for (reward of rewards; track trackId) {
+          @for (reward of rewards; track trackId(reward)) {
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/reward', reward.id, 'view']">{{ reward.id }}</a>

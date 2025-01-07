@@ -1,0 +1,62 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (chatMessage(); as chatMessageRef) {
+      <div>
+        <h2 data-cy="chatMessageDetailsHeading"><span jhiTranslate="starMindApp.chatMessage.detail.title">Chat Message</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ chatMessageRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.chatMessage.message">Message</span></dt>
+          <dd>
+            <span>{{ chatMessageRef.message }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.chatMessage.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ chatMessageRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.chatMessage.likeCount">Like Count</span></dt>
+          <dd>
+            <span>{{ chatMessageRef.likeCount }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.chatMessage.author">Author</span></dt>
+          <dd>
+            <span>{{ chatMessageRef.author?.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.chatMessage.globalChat">Global Chat</span></dt>
+          <dd>
+            @if (chatMessage()!.globalChat) {
+              <div>
+                <a [routerLink]="['/global-chat', chatMessage()!.globalChat?.id, 'view']">{{ chatMessageRef.globalChat?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="starMindApp.chatMessage.ideaChat">Idea Chat</span></dt>
+          <dd>
+            @if (chatMessage()!.ideaChat) {
+              <div>
+                <a [routerLink]="['/idea-chat', chatMessage()!.ideaChat?.id, 'view']">{{ chatMessageRef.ideaChat?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/chat-message', chatMessageRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

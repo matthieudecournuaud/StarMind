@@ -13,4 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface IdeaRepository extends JpaRepository<Idea, Long> {
     @Query("select idea from Idea idea where idea.author.login = ?#{authentication.name}")
     List<Idea> findByAuthorIsCurrentUser();
+
+    @Query("select idea from Idea idea where idea.manager.login = ?#{authentication.name}")
+    List<Idea> findByManagerIsCurrentUser();
 }

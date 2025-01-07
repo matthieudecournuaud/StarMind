@@ -49,10 +49,10 @@ describe('LikeHistory Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call Idea query and add missing value', () => {
       const likeHistory: ILikeHistory = { id: 456 };
-      const idea: IIdea = { id: 17157 };
+      const idea: IIdea = { id: 32378 };
       likeHistory.idea = idea;
 
-      const ideaCollection: IIdea[] = [{ id: 27855 }];
+      const ideaCollection: IIdea[] = [{ id: 22813 }];
       jest.spyOn(ideaService, 'query').mockReturnValue(of(new HttpResponse({ body: ideaCollection })));
       const additionalIdeas = [idea];
       const expectedCollection: IIdea[] = [...additionalIdeas, ...ideaCollection];
@@ -71,7 +71,7 @@ describe('LikeHistory Management Update Component', () => {
 
     it('Should update editForm', () => {
       const likeHistory: ILikeHistory = { id: 456 };
-      const idea: IIdea = { id: 19229 };
+      const idea: IIdea = { id: 7738 };
       likeHistory.idea = idea;
 
       activatedRoute.data = of({ likeHistory });

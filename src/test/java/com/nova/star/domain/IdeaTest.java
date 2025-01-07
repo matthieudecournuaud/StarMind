@@ -3,7 +3,9 @@ package com.nova.star.domain;
 import static com.nova.star.domain.CategoryTestSamples.*;
 import static com.nova.star.domain.CommentTestSamples.*;
 import static com.nova.star.domain.IdeaTestSamples.*;
+import static com.nova.star.domain.LikeHistoryTestSamples.*;
 import static com.nova.star.domain.RewardTestSamples.*;
+import static com.nova.star.domain.VoteTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nova.star.web.rest.TestUtil;
@@ -50,15 +52,47 @@ class IdeaTest {
     }
 
     @Test
-    void ideaCategoryTest() {
+    void votesTest() {
         Idea idea = getIdeaRandomSampleGenerator();
-        Category categoryBack = getCategoryRandomSampleGenerator();
+        Vote voteBack = getVoteRandomSampleGenerator();
 
-        idea.setIdeaCategory(categoryBack);
-        assertThat(idea.getIdeaCategory()).isEqualTo(categoryBack);
+        idea.addVotes(voteBack);
+        assertThat(idea.getVotes()).containsOnly(voteBack);
+        assertThat(voteBack.getIdea()).isEqualTo(idea);
 
-        idea.ideaCategory(null);
-        assertThat(idea.getIdeaCategory()).isNull();
+        idea.removeVotes(voteBack);
+        assertThat(idea.getVotes()).doesNotContain(voteBack);
+        assertThat(voteBack.getIdea()).isNull();
+
+        idea.votes(new HashSet<>(Set.of(voteBack)));
+        assertThat(idea.getVotes()).containsOnly(voteBack);
+        assertThat(voteBack.getIdea()).isEqualTo(idea);
+
+        idea.setVotes(new HashSet<>());
+        assertThat(idea.getVotes()).doesNotContain(voteBack);
+        assertThat(voteBack.getIdea()).isNull();
+    }
+
+    @Test
+    void likeHistoriesTest() {
+        Idea idea = getIdeaRandomSampleGenerator();
+        LikeHistory likeHistoryBack = getLikeHistoryRandomSampleGenerator();
+
+        idea.addLikeHistories(likeHistoryBack);
+        assertThat(idea.getLikeHistories()).containsOnly(likeHistoryBack);
+        assertThat(likeHistoryBack.getIdea()).isEqualTo(idea);
+
+        idea.removeLikeHistories(likeHistoryBack);
+        assertThat(idea.getLikeHistories()).doesNotContain(likeHistoryBack);
+        assertThat(likeHistoryBack.getIdea()).isNull();
+
+        idea.likeHistories(new HashSet<>(Set.of(likeHistoryBack)));
+        assertThat(idea.getLikeHistories()).containsOnly(likeHistoryBack);
+        assertThat(likeHistoryBack.getIdea()).isEqualTo(idea);
+
+        idea.setLikeHistories(new HashSet<>());
+        assertThat(idea.getLikeHistories()).doesNotContain(likeHistoryBack);
+        assertThat(likeHistoryBack.getIdea()).isNull();
     }
 
     @Test
@@ -83,17 +117,5 @@ class IdeaTest {
 
         idea.category(null);
         assertThat(idea.getCategory()).isNull();
-    }
-
-    @Test
-    void rewardTest() {
-        Idea idea = getIdeaRandomSampleGenerator();
-        Reward rewardBack = getRewardRandomSampleGenerator();
-
-        idea.setReward(rewardBack);
-        assertThat(idea.getReward()).isEqualTo(rewardBack);
-
-        idea.reward(null);
-        assertThat(idea.getReward()).isNull();
     }
 }

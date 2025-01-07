@@ -26,8 +26,22 @@
           <dt><span jhiTranslate="starMindApp.idea.status">Status</span></dt>
           <dd>
             <span [jhiTranslate]="'starMindApp.IdeaStatus.' + (ideaRef.status ?? 'null')">{{
-              { null: '', OPEN: 'OPEN', IN_PROGRESS: 'IN_PROGRESS', COMPLETED: 'COMPLETED' }[ideaRef.status ?? 'null']
+              {
+                null: '',
+                OPEN: 'OPEN',
+                IN_PROGRESS: 'IN_PROGRESS',
+                COMPLETED: 'COMPLETED',
+                APPROVED: 'APPROVED',
+                REJECTED: 'REJECTED',
+                PUBLISHED: 'PUBLISHED',
+                IN_VOTING: 'IN_VOTING',
+                MANAGER_REVIEW: 'MANAGER_REVIEW',
+              }[ideaRef.status ?? 'null']
             }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.isConfidential">Is Confidential</span></dt>
+          <dd>
+            <span>{{ ideaRef.isConfidential }}</span>
           </dd>
           <dt><span jhiTranslate="starMindApp.idea.validation">Validation</span></dt>
           <dd>
@@ -44,7 +58,7 @@
                 PLATINE: 'PLATINE',
                 DIAMANT: 'DIAMANT',
                 TITANIUM: 'TITANIUM',
-                STARMIND: 'STARMIND',
+                ELYSIUM: 'ELYSIUM',
               }[ideaRef.rewardType ?? 'null']
             }}</span>
           </dd>
@@ -60,17 +74,17 @@
           <dd>
             <span>{{ ideaRef.modifiedDate | formatMediumDatetime }}</span>
           </dd>
+          <dt><span jhiTranslate="starMindApp.idea.isPublic">Is Public</span></dt>
+          <dd>
+            <span>{{ ideaRef.isPublic }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.idea.impact">Impact</span></dt>
+          <dd>
+            <span>{{ ideaRef.impact }}</span>
+          </dd>
           <dt><span jhiTranslate="starMindApp.idea.author">Author</span></dt>
           <dd>
             <span>{{ ideaRef.author?.id }}</span>
-          </dd>
-          <dt><span jhiTranslate="starMindApp.idea.ideaCategory">Idea Category</span></dt>
-          <dd>
-            @if (idea()!.ideaCategory) {
-              <div>
-                <a [routerLink]="['/category', idea()!.ideaCategory?.id, 'view']">{{ ideaRef.ideaCategory?.id }}</a>
-              </div>
-            }
           </dd>
           <dt><span jhiTranslate="starMindApp.idea.assignedReward">Assigned Reward</span></dt>
           <dd>
@@ -80,19 +94,15 @@
               </div>
             }
           </dd>
+          <dt><span jhiTranslate="starMindApp.idea.manager">Manager</span></dt>
+          <dd>
+            <span>{{ ideaRef.manager?.id }}</span>
+          </dd>
           <dt><span jhiTranslate="starMindApp.idea.category">Category</span></dt>
           <dd>
             @if (idea()!.category) {
               <div>
                 <a [routerLink]="['/category', idea()!.category?.id, 'view']">{{ ideaRef.category?.id }}</a>
-              </div>
-            }
-          </dd>
-          <dt><span jhiTranslate="starMindApp.idea.reward">Reward</span></dt>
-          <dd>
-            @if (idea()!.reward) {
-              <div>
-                <a [routerLink]="['/reward', idea()!.reward?.id, 'view']">{{ ideaRef.reward?.id }}</a>
               </div>
             }
           </dd>

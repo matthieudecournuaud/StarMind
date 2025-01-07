@@ -3,39 +3,45 @@ import dayjs from 'dayjs/esm';
 import { IIdea, NewIdea } from './idea.model';
 
 export const sampleWithRequiredData: IIdea = {
-  id: 28796,
-  title: 'résoudre',
+  id: 3504,
+  title: 'drelin',
   description: '../fake-data/blob/hipster.txt',
-  status: 'IN_PROGRESS',
+  status: 'REJECTED',
+  isConfidential: false,
 };
 
 export const sampleWithPartialData: IIdea = {
-  id: 3534,
-  title: 'fourbe extatique changer',
+  id: 11589,
+  title: 'intrépide',
   description: '../fake-data/blob/hipster.txt',
-  status: 'OPEN',
-  rewardType: 'ARGENT',
-  likes: 'retourner comme au-delà',
-  createdDate: dayjs('2024-08-30T11:28'),
-  modifiedDate: dayjs('2024-08-30T04:13'),
+  status: 'IN_PROGRESS',
+  isConfidential: false,
+  validation: true,
+  rewardType: 'DIAMANT',
+  likes: 10243,
+  createdDate: dayjs('2024-12-09T05:41'),
 };
 
 export const sampleWithFullData: IIdea = {
-  id: 23931,
-  title: 'splendide',
+  id: 1989,
+  title: 'insipide présidence jouer',
   description: '../fake-data/blob/hipster.txt',
-  status: 'OPEN',
+  status: 'COMPLETED',
+  isConfidential: true,
   validation: true,
-  rewardType: 'STARMIND',
-  likes: 'en face de étant donné que',
-  createdDate: dayjs('2024-08-30T09:52'),
-  modifiedDate: dayjs('2024-08-29T17:09'),
+  rewardType: 'OR',
+  likes: 20511,
+  createdDate: dayjs('2024-12-09T09:19'),
+  modifiedDate: dayjs('2024-12-08T22:45'),
+  isPublic: true,
+  impact: 'volontiers hé du moment que',
 };
 
 export const sampleWithNewData: NewIdea = {
-  title: 'dès groin groin',
+  title: 'auparavant',
   description: '../fake-data/blob/hipster.txt',
-  status: 'COMPLETED',
+  status: 'REJECTED',
+  isConfidential: true,
   id: null,
 };
 

@@ -1,0 +1,12 @@
+{
+  "starMindApp": {
+    "ProspectStatus": {
+      "null": "",
+      "NEW": "NEW",
+      "CONTACTED": "CONTACTED",
+      "INTERVIEW_SCHEDULED": "INTERVIEW_SCHEDULED",
+      "HIRED": "HIRED",
+      "REJECTED": "REJECTED"
+    }
+  }
+}

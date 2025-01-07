@@ -46,16 +46,16 @@ export class RewardHistoryComponent implements OnInit {
   hasMorePage = computed(() => !!this.links().next);
   isFirstFetch = computed(() => Object.keys(this.links()).length === 0);
 
-  public router = inject(Router);
-  protected rewardHistoryService = inject(RewardHistoryService);
-  protected activatedRoute = inject(ActivatedRoute);
-  protected sortService = inject(SortService);
+  public readonly router = inject(Router);
+  protected readonly rewardHistoryService = inject(RewardHistoryService);
+  protected readonly activatedRoute = inject(ActivatedRoute);
+  protected readonly sortService = inject(SortService);
   protected parseLinks = inject(ParseLinks);
   protected dataUtils = inject(DataUtils);
   protected modalService = inject(NgbModal);
   protected ngZone = inject(NgZone);
 
-  trackId = (_index: number, item: IRewardHistory): number => this.rewardHistoryService.getRewardHistoryIdentifier(item);
+  trackId = (item: IRewardHistory): number => this.rewardHistoryService.getRewardHistoryIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])

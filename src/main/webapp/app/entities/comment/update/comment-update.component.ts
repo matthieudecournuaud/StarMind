@@ -10,10 +10,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-import { IIdea } from 'app/entities/idea/idea.model';
-import { IdeaService } from 'app/entities/idea/service/idea.service';
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/service/user.service';
+import { IIdea } from 'app/entities/idea/idea.model';
+import { IdeaService } from 'app/entities/idea/service/idea.service';
 import { CommentService } from '../service/comment.service';
 import { IComment } from '../comment.model';
 import { CommentFormGroup, CommentFormService } from './comment-form.service';
@@ -28,23 +28,23 @@ export class CommentUpdateComponent implements OnInit {
   isSaving = false;
   comment: IComment | null = null;
 
-  ideasSharedCollection: IIdea[] = [];
   usersSharedCollection: IUser[] = [];
+  ideasSharedCollection: IIdea[] = [];
 
   protected dataUtils = inject(DataUtils);
   protected eventManager = inject(EventManager);
   protected commentService = inject(CommentService);
   protected commentFormService = inject(CommentFormService);
-  protected ideaService = inject(IdeaService);
   protected userService = inject(UserService);
+  protected ideaService = inject(IdeaService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: CommentFormGroup = this.commentFormService.createCommentFormGroup();
 
-  compareIdea = (o1: IIdea | null, o2: IIdea | null): boolean => this.ideaService.compareIdea(o1, o2);
-
   compareUser = (o1: IUser | null, o2: IUser | null): boolean => this.userService.compareUser(o1, o2);
+
+  compareIdea = (o1: IIdea | null, o2: IIdea | null): boolean => this.ideaService.compareIdea(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ comment }) => {
@@ -109,27 +109,21 @@ export class CommentUpdateComponent implements OnInit {
     this.comment = comment;
     this.commentFormService.resetForm(this.editForm, comment);
 
-    this.ideasSharedCollection = this.ideaService.addIdeaToCollectionIfMissing<IIdea>(
-      this.ideasSharedCollection,
-      comment.relatedIdea,
-      comment.idea,
-    );
     this.usersSharedCollection = this.userService.addUserToCollectionIfMissing<IUser>(this.usersSharedCollection, comment.author);
+    this.ideasSharedCollection = this.ideaService.addIdeaToCollectionIfMissing<IIdea>(this.ideasSharedCollection, comment.idea);
   }
 
   protected loadRelationshipsOptions(): void {
-    this.ideaService
-      .query()
-      .pipe(map((res: HttpResponse<IIdea[]>) => res.body ?? []))
-      .pipe(
-        map((ideas: IIdea[]) => this.ideaService.addIdeaToCollectionIfMissing<IIdea>(ideas, this.comment?.relatedIdea, this.comment?.idea)),
-      )
-      .subscribe((ideas: IIdea[]) => (this.ideasSharedCollection = ideas));
-
     this.userService
       .query()
       .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
       .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.comment?.author)))
       .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
+
+    this.ideaService
+      .query()
+      .pipe(map((res: HttpResponse<IIdea[]>) => res.body ?? []))
+      .pipe(map((ideas: IIdea[]) => this.ideaService.addIdeaToCollectionIfMissing<IIdea>(ideas, this.comment?.idea)))
+      .subscribe((ideas: IIdea[]) => (this.ideasSharedCollection = ideas));
   }
 }

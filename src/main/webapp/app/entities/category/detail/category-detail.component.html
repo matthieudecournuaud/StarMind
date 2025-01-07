@@ -27,22 +27,6 @@
           <dd>
             <span>{{ categoryRef.level }}</span>
           </dd>
-          <dt><span jhiTranslate="starMindApp.category.parentCategory">Parent Category</span></dt>
-          <dd>
-            @if (category()!.parentCategory) {
-              <div>
-                <a [routerLink]="['/category', category()!.parentCategory?.id, 'view']">{{ categoryRef.parentCategory?.id }}</a>
-              </div>
-            }
-          </dd>
-          <dt><span jhiTranslate="starMindApp.category.superCategory">Super Category</span></dt>
-          <dd>
-            @if (category()!.superCategory) {
-              <div>
-                <a [routerLink]="['/category', category()!.superCategory?.id, 'view']">{{ categoryRef.superCategory?.id }}</a>
-              </div>
-            }
-          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

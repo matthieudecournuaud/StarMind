@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20240830123912"
+    "changelogDate": "20241209143949"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "title",
@@ -11,15 +12,19 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text",
+      "fieldType": "TextBlob",
       "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "status",
       "fieldType": "IdeaStatus",
       "fieldValidateRules": ["required"],
-      "fieldValues": "OPEN,IN_PROGRESS,COMPLETED"
+      "fieldValues": "OPEN,IN_PROGRESS,COMPLETED,APPROVED,REJECTED,PUBLISHED,IN_VOTING,MANAGER_REVIEW"
+    },
+    {
+      "fieldName": "isConfidential",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "validation",
@@ -28,11 +33,11 @@
     {
       "fieldName": "rewardType",
       "fieldType": "RewardType",
-      "fieldValues": "BRONZE,ARGENT,OR,PLATINE,DIAMANT,TITANIUM,STARMIND"
+      "fieldValues": "BRONZE,ARGENT,OR,PLATINE,DIAMANT,TITANIUM,ELYSIUM"
     },
     {
       "fieldName": "likes",
-      "fieldType": "String"
+      "fieldType": "Integer"
     },
     {
       "fieldName": "createdDate",
@@ -41,6 +46,14 @@
     {
       "fieldName": "modifiedDate",
       "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "isPublic",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "impact",
+      "fieldType": "String"
     }
   ],
   "name": "Idea",
@@ -48,7 +61,22 @@
   "relationships": [
     {
       "otherEntityName": "comment",
+      "otherEntityRelationshipName": "idea",
       "relationshipName": "comments",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "vote",
+      "otherEntityRelationshipName": "idea",
+      "relationshipName": "votes",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "likeHistory",
+      "otherEntityRelationshipName": "idea",
+      "relationshipName": "likeHistories",
       "relationshipSide": "left",
       "relationshipType": "one-to-many"
     },
@@ -60,17 +88,26 @@
       "relationshipWithBuiltInEntity": true
     },
     {
-      "otherEntityName": "category",
-      "relationshipName": "ideaCategory",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
-    },
-    {
       "otherEntityName": "reward",
       "relationshipName": "assignedReward",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "user",
+      "relationshipName": "manager",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "category",
+      "otherEntityRelationshipName": "ideas",
+      "relationshipName": "category",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }

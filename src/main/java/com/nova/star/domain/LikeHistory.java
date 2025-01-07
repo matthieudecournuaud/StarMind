@@ -34,13 +34,16 @@ public class LikeHistory implements Serializable {
     private ZonedDateTime actionDate;
 
     @Column(name = "old_likes")
-    private String oldLikes;
+    private Integer oldLikes;
 
     @Column(name = "new_likes")
-    private String newLikes;
+    private Integer newLikes;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "comments", "author", "ideaCategory", "assignedReward", "category", "reward" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "comments", "votes", "likeHistories", "author", "assignedReward", "manager", "category" },
+        allowSetters = true
+    )
     private Idea idea;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -84,29 +87,29 @@ public class LikeHistory implements Serializable {
         this.actionDate = actionDate;
     }
 
-    public String getOldLikes() {
+    public Integer getOldLikes() {
         return this.oldLikes;
     }
 
-    public LikeHistory oldLikes(String oldLikes) {
+    public LikeHistory oldLikes(Integer oldLikes) {
         this.setOldLikes(oldLikes);
         return this;
     }
 
-    public void setOldLikes(String oldLikes) {
+    public void setOldLikes(Integer oldLikes) {
         this.oldLikes = oldLikes;
     }
 
-    public String getNewLikes() {
+    public Integer getNewLikes() {
         return this.newLikes;
     }
 
-    public LikeHistory newLikes(String newLikes) {
+    public LikeHistory newLikes(Integer newLikes) {
         this.setNewLikes(newLikes);
         return this;
     }
 
-    public void setNewLikes(String newLikes) {
+    public void setNewLikes(Integer newLikes) {
         this.newLikes = newLikes;
     }
 
@@ -149,8 +152,8 @@ public class LikeHistory implements Serializable {
             "id=" + getId() +
             ", action='" + getAction() + "'" +
             ", actionDate='" + getActionDate() + "'" +
-            ", oldLikes='" + getOldLikes() + "'" +
-            ", newLikes='" + getNewLikes() + "'" +
+            ", oldLikes=" + getOldLikes() +
+            ", newLikes=" + getNewLikes() +
             "}";
     }
 }

@@ -23,14 +23,6 @@
           <dd>
             <span>{{ commentRef.createdDate | formatMediumDatetime }}</span>
           </dd>
-          <dt><span jhiTranslate="starMindApp.comment.relatedIdea">Related Idea</span></dt>
-          <dd>
-            @if (comment()!.relatedIdea) {
-              <div>
-                <a [routerLink]="['/idea', comment()!.relatedIdea?.id, 'view']">{{ commentRef.relatedIdea?.id }}</a>
-              </div>
-            }
-          </dd>
           <dt><span jhiTranslate="starMindApp.comment.author">Author</span></dt>
           <dd>
             <span>{{ commentRef.author?.id }}</span>

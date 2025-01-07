@@ -35,8 +35,8 @@ public class Reward implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "reward")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "comments", "author", "ideaCategory", "assignedReward", "category", "reward" }, allowSetters = true)
-    private Set<Idea> ideas = new HashSet<>();
+    @JsonIgnoreProperties(value = { "idea", "reward" }, allowSetters = true)
+    private Set<RewardHistory> rewardHistories = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -79,34 +79,34 @@ public class Reward implements Serializable {
         this.description = description;
     }
 
-    public Set<Idea> getIdeas() {
-        return this.ideas;
+    public Set<RewardHistory> getRewardHistories() {
+        return this.rewardHistories;
     }
 
-    public void setIdeas(Set<Idea> ideas) {
-        if (this.ideas != null) {
-            this.ideas.forEach(i -> i.setReward(null));
+    public void setRewardHistories(Set<RewardHistory> rewardHistories) {
+        if (this.rewardHistories != null) {
+            this.rewardHistories.forEach(i -> i.setReward(null));
         }
-        if (ideas != null) {
-            ideas.forEach(i -> i.setReward(this));
+        if (rewardHistories != null) {
+            rewardHistories.forEach(i -> i.setReward(this));
         }
-        this.ideas = ideas;
+        this.rewardHistories = rewardHistories;
     }
 
-    public Reward ideas(Set<Idea> ideas) {
-        this.setIdeas(ideas);
+    public Reward rewardHistories(Set<RewardHistory> rewardHistories) {
+        this.setRewardHistories(rewardHistories);
         return this;
     }
 
-    public Reward addIdeas(Idea idea) {
-        this.ideas.add(idea);
-        idea.setReward(this);
+    public Reward addRewardHistories(RewardHistory rewardHistory) {
+        this.rewardHistories.add(rewardHistory);
+        rewardHistory.setReward(this);
         return this;
     }
 
-    public Reward removeIdeas(Idea idea) {
-        this.ideas.remove(idea);
-        idea.setReward(null);
+    public Reward removeRewardHistories(RewardHistory rewardHistory) {
+        this.rewardHistories.remove(rewardHistory);
+        rewardHistory.setReward(null);
         return this;
     }
 

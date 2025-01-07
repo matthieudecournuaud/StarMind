@@ -9,14 +9,19 @@
         "main": "Entités",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
         "idea": "Idea",
-        "category": "Category",
         "comment": "Comment",
+        "category": "Category",
         "reward": "Reward",
+        "vote": "Vote",
         "ideaHistory": "Idea History",
         "rewardHistory": "Reward History",
         "likeHistory": "Like History",
-        "notification": "Notification",
-        "attachment": "Attachment"
+        "globalChat": "Global Chat",
+        "ideaChat": "Idea Chat",
+        "chatMessage": "Chat Message",
+        "prospectBoard": "Prospect Board",
+        "prospectEntry": "Prospect Entry",
+        "notification": "Notification"
       },
       "account": {
         "main": "Compte",

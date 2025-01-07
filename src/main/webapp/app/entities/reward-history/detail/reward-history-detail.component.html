@@ -27,19 +27,19 @@
           <dd>
             <span>{{ rewardHistoryRef.description }}</span>
           </dd>
-          <dt><span jhiTranslate="starMindApp.rewardHistory.reward">Reward</span></dt>
-          <dd>
-            @if (rewardHistory()!.reward) {
-              <div>
-                <a [routerLink]="['/reward', rewardHistory()!.reward?.id, 'view']">{{ rewardHistoryRef.reward?.id }}</a>
-              </div>
-            }
-          </dd>
           <dt><span jhiTranslate="starMindApp.rewardHistory.idea">Idea</span></dt>
           <dd>
             @if (rewardHistory()!.idea) {
               <div>
                 <a [routerLink]="['/idea', rewardHistory()!.idea?.id, 'view']">{{ rewardHistoryRef.idea?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="starMindApp.rewardHistory.reward">Reward</span></dt>
+          <dd>
+            @if (rewardHistory()!.reward) {
+              <div>
+                <a [routerLink]="['/reward', rewardHistory()!.reward?.id, 'view']">{{ rewardHistoryRef.reward?.id }}</a>
               </div>
             }
           </dd>

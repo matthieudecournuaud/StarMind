@@ -12,10 +12,10 @@ import { EventManager, EventWithContent } from 'app/core/util/event-manager.serv
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/service/user.service';
-import { ICategory } from 'app/entities/category/category.model';
-import { CategoryService } from 'app/entities/category/service/category.service';
 import { IReward } from 'app/entities/reward/reward.model';
 import { RewardService } from 'app/entities/reward/service/reward.service';
+import { ICategory } from 'app/entities/category/category.model';
+import { CategoryService } from 'app/entities/category/service/category.service';
 import { IdeaStatus } from 'app/entities/enumerations/idea-status.model';
 import { RewardType } from 'app/entities/enumerations/reward-type.model';
 import { IdeaService } from '../service/idea.service';
@@ -35,16 +35,16 @@ export class IdeaUpdateComponent implements OnInit {
   rewardTypeValues = Object.keys(RewardType);
 
   usersSharedCollection: IUser[] = [];
-  categoriesSharedCollection: ICategory[] = [];
   rewardsSharedCollection: IReward[] = [];
+  categoriesSharedCollection: ICategory[] = [];
 
   protected dataUtils = inject(DataUtils);
   protected eventManager = inject(EventManager);
   protected ideaService = inject(IdeaService);
   protected ideaFormService = inject(IdeaFormService);
   protected userService = inject(UserService);
-  protected categoryService = inject(CategoryService);
   protected rewardService = inject(RewardService);
+  protected categoryService = inject(CategoryService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -52,9 +52,9 @@ export class IdeaUpdateComponent implements OnInit {
 
   compareUser = (o1: IUser | null, o2: IUser | null): boolean => this.userService.compareUser(o1, o2);
 
-  compareCategory = (o1: ICategory | null, o2: ICategory | null): boolean => this.categoryService.compareCategory(o1, o2);
-
   compareReward = (o1: IReward | null, o2: IReward | null): boolean => this.rewardService.compareReward(o1, o2);
+
+  compareCategory = (o1: ICategory | null, o2: ICategory | null): boolean => this.categoryService.compareCategory(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ idea }) => {
@@ -119,16 +119,18 @@ export class IdeaUpdateComponent implements OnInit {
     this.idea = idea;
     this.ideaFormService.resetForm(this.editForm, idea);
 
-    this.usersSharedCollection = this.userService.addUserToCollectionIfMissing<IUser>(this.usersSharedCollection, idea.author);
-    this.categoriesSharedCollection = this.categoryService.addCategoryToCollectionIfMissing<ICategory>(
-      this.categoriesSharedCollection,
-      idea.ideaCategory,
-      idea.category,
+    this.usersSharedCollection = this.userService.addUserToCollectionIfMissing<IUser>(
+      this.usersSharedCollection,
+      idea.author,
+      idea.manager,
     );
     this.rewardsSharedCollection = this.rewardService.addRewardToCollectionIfMissing<IReward>(
       this.rewardsSharedCollection,
       idea.assignedReward,
-      idea.reward,
+    );
+    this.categoriesSharedCollection = this.categoryService.addCategoryToCollectionIfMissing<ICategory>(
+      this.categoriesSharedCollection,
+      idea.category,
     );
   }
 
@@ -136,27 +138,21 @@ export class IdeaUpdateComponent implements OnInit {
     this.userService
       .query()
       .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-      .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.idea?.author)))
+      .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.idea?.author, this.idea?.manager)))
       .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
+
+    this.rewardService
+      .query()
+      .pipe(map((res: HttpResponse<IReward[]>) => res.body ?? []))
+      .pipe(map((rewards: IReward[]) => this.rewardService.addRewardToCollectionIfMissing<IReward>(rewards, this.idea?.assignedReward)))
+      .subscribe((rewards: IReward[]) => (this.rewardsSharedCollection = rewards));
 
     this.categoryService
       .query()
       .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
       .pipe(
-        map((categories: ICategory[]) =>
-          this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, this.idea?.ideaCategory, this.idea?.category),
-        ),
+        map((categories: ICategory[]) => this.categoryService.addCategoryToCollectionIfMissing<ICategory>(categories, this.idea?.category)),
       )
       .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
-
-    this.rewardService
-      .query()
-      .pipe(map((res: HttpResponse<IReward[]>) => res.body ?? []))
-      .pipe(
-        map((rewards: IReward[]) =>
-          this.rewardService.addRewardToCollectionIfMissing<IReward>(rewards, this.idea?.assignedReward, this.idea?.reward),
-        ),
-      )
-      .subscribe((rewards: IReward[]) => (this.rewardsSharedCollection = rewards));
   }
 }

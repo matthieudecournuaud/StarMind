@@ -91,7 +91,7 @@ describe('Comment Management Component', () => {
     it('Should forward to commentService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getCommentIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = comp.trackId(entity);
       expect(service.getCommentIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });

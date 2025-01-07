@@ -5,9 +5,9 @@ export interface ILikeHistory {
   id: number;
   action?: string | null;
   actionDate?: dayjs.Dayjs | null;
-  oldLikes?: string | null;
-  newLikes?: string | null;
-  idea?: IIdea | null;
+  oldLikes?: number | null;
+  newLikes?: number | null;
+  idea?: Pick<IIdea, 'id'> | null;
 }
 
 export type NewLikeHistory = Omit<ILikeHistory, 'id'> & { id: null };

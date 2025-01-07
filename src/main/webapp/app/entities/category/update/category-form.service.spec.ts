@@ -23,8 +23,6 @@ describe('Category Form Service', () => {
             name: expect.any(Object),
             description: expect.any(Object),
             level: expect.any(Object),
-            parentCategory: expect.any(Object),
-            superCategory: expect.any(Object),
           }),
         );
       });
@@ -38,8 +36,6 @@ describe('Category Form Service', () => {
             name: expect.any(Object),
             description: expect.any(Object),
             level: expect.any(Object),
-            parentCategory: expect.any(Object),
-            superCategory: expect.any(Object),
           }),
         );
       });

@@ -56,12 +56,6 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="relatedIdea.id">
-              <div class="d-flex">
-                <span jhiTranslate="starMindApp.comment.relatedIdea">Related Idea</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col" jhiSortBy="author.id">
               <div class="d-flex">
                 <span jhiTranslate="starMindApp.comment.author">Author</span>
@@ -78,20 +72,13 @@
           </tr>
         </thead>
         <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
-          @for (comment of comments; track trackId) {
+          @for (comment of comments; track trackId(comment)) {
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/comment', comment.id, 'view']">{{ comment.id }}</a>
               </td>
               <td>{{ comment.content }}</td>
               <td>{{ comment.createdDate | formatMediumDatetime }}</td>
-              <td>
-                @if (comment.relatedIdea) {
-                  <div>
-                    <a [routerLink]="['/idea', comment.relatedIdea.id, 'view']">{{ comment.relatedIdea.id }}</a>
-                  </div>
-                }
-              </td>
               <td>
                 {{ comment.author?.id }}
               </td>

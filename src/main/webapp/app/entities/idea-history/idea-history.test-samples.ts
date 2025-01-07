@@ -3,31 +3,31 @@ import dayjs from 'dayjs/esm';
 import { IIdeaHistory, NewIdeaHistory } from './idea-history.model';
 
 export const sampleWithRequiredData: IIdeaHistory = {
-  id: 8543,
-  action: 'avant que',
-  actionDate: dayjs('2024-08-30T10:05'),
+  id: 12947,
+  action: 'quelque plic',
+  actionDate: dayjs('2024-12-09T08:52'),
 };
 
 export const sampleWithPartialData: IIdeaHistory = {
-  id: 28252,
-  action: 'terminer pendant responsable',
-  actionDate: dayjs('2024-08-29T22:01'),
+  id: 6667,
+  action: 'foule',
+  actionDate: dayjs('2024-12-09T03:06'),
   description: '../fake-data/blob/hipster.txt',
-  likes: 'sembler beaucoup',
+  rewardType: 'TITANIUM',
 };
 
 export const sampleWithFullData: IIdeaHistory = {
-  id: 7302,
-  action: 'a juriste',
-  actionDate: dayjs('2024-08-30T04:16'),
+  id: 17124,
+  action: 'tant que pallier drelin',
+  actionDate: dayjs('2024-12-09T03:37'),
   description: '../fake-data/blob/hipster.txt',
-  rewardType: 'DIAMANT',
-  likes: 'aïe cot cot',
+  rewardType: 'ELYSIUM',
+  likes: 15326,
 };
 
 export const sampleWithNewData: NewIdeaHistory = {
-  action: 'adversaire',
-  actionDate: dayjs('2024-08-30T12:36'),
+  action: 'ha ha du fait que direction',
+  actionDate: dayjs('2024-12-09T13:43'),
   id: null,
 };
 

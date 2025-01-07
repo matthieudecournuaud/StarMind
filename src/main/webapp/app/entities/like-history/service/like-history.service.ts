@@ -26,8 +26,8 @@ export type EntityArrayResponseType = HttpResponse<ILikeHistory[]>;
 
 @Injectable({ providedIn: 'root' })
 export class LikeHistoryService {
-  protected http = inject(HttpClient);
-  protected applicationConfigService = inject(ApplicationConfigService);
+  protected readonly http = inject(HttpClient);
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
 
   protected resourceUrl = this.applicationConfigService.getEndpointFor('api/like-histories');
 

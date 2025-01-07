@@ -63,6 +63,13 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="isConfidential">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.isConfidential">Is Confidential</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col" jhiSortBy="validation">
               <div class="d-flex">
                 <span jhiTranslate="starMindApp.idea.validation">Validation</span>
@@ -98,15 +105,23 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="author.id">
+            <th scope="col" jhiSortBy="isPublic">
               <div class="d-flex">
-                <span jhiTranslate="starMindApp.idea.author">Author</span>
+                <span jhiTranslate="starMindApp.idea.isPublic">Is Public</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="ideaCategory.id">
+            <th scope="col" jhiSortBy="impact">
               <div class="d-flex">
-                <span jhiTranslate="starMindApp.idea.ideaCategory">Idea Category</span>
+                <span jhiTranslate="starMindApp.idea.impact">Impact</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="author.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.idea.author">Author</span>
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -116,15 +131,15 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="category.id">
+            <th scope="col" jhiSortBy="manager.id">
               <div class="d-flex">
-                <span jhiTranslate="starMindApp.idea.category">Category</span>
+                <span jhiTranslate="starMindApp.idea.manager">Manager</span>
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="reward.id">
+            <th scope="col" jhiSortBy="category.id">
               <div class="d-flex">
-                <span jhiTranslate="starMindApp.idea.reward">Reward</span>
+                <span jhiTranslate="starMindApp.idea.category">Category</span>
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -132,7 +147,7 @@
           </tr>
         </thead>
         <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
-          @for (idea of ideas; track trackId) {
+          @for (idea of ideas; track trackId(idea)) {
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/idea', idea.id, 'view']">{{ idea.id }}</a>
@@ -140,8 +155,21 @@
               <td>{{ idea.title }}</td>
               <td>{{ idea.description }}</td>
               <td [jhiTranslate]="'starMindApp.IdeaStatus.' + (idea.status ?? 'null')">
-                {{ { null: '', OPEN: 'OPEN', IN_PROGRESS: 'IN_PROGRESS', COMPLETED: 'COMPLETED' }[idea.status ?? 'null'] }}
+                {{
+                  {
+                    null: '',
+                    OPEN: 'OPEN',
+                    IN_PROGRESS: 'IN_PROGRESS',
+                    COMPLETED: 'COMPLETED',
+                    APPROVED: 'APPROVED',
+                    REJECTED: 'REJECTED',
+                    PUBLISHED: 'PUBLISHED',
+                    IN_VOTING: 'IN_VOTING',
+                    MANAGER_REVIEW: 'MANAGER_REVIEW',
+                  }[idea.status ?? 'null']
+                }}
               </td>
+              <td>{{ idea.isConfidential }}</td>
               <td>{{ idea.validation }}</td>
               <td [jhiTranslate]="'starMindApp.RewardType.' + (idea.rewardType ?? 'null')">
                 {{
@@ -153,22 +181,17 @@
                     PLATINE: 'PLATINE',
                     DIAMANT: 'DIAMANT',
                     TITANIUM: 'TITANIUM',
-                    STARMIND: 'STARMIND',
+                    ELYSIUM: 'ELYSIUM',
                   }[idea.rewardType ?? 'null']
                 }}
               </td>
               <td>{{ idea.likes }}</td>
               <td>{{ idea.createdDate | formatMediumDatetime }}</td>
               <td>{{ idea.modifiedDate | formatMediumDatetime }}</td>
+              <td>{{ idea.isPublic }}</td>
+              <td>{{ idea.impact }}</td>
               <td>
                 {{ idea.author?.id }}
-              </td>
-              <td>
-                @if (idea.ideaCategory) {
-                  <div>
-                    <a [routerLink]="['/category', idea.ideaCategory.id, 'view']">{{ idea.ideaCategory.id }}</a>
-                  </div>
-                }
               </td>
               <td>
                 @if (idea.assignedReward) {
@@ -178,16 +201,12 @@
                 }
               </td>
               <td>
+                {{ idea.manager?.id }}
+              </td>
+              <td>
                 @if (idea.category) {
                   <div>
                     <a [routerLink]="['/category', idea.category.id, 'view']">{{ idea.category.id }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @if (idea.reward) {
-                  <div>
-                    <a [routerLink]="['/reward', idea.reward.id, 'view']">{{ idea.reward.id }}</a>
                   </div>
                 }
               </td>

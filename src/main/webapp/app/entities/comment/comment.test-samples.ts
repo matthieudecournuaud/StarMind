@@ -3,19 +3,20 @@ import dayjs from 'dayjs/esm';
 import { IComment, NewComment } from './comment.model';
 
 export const sampleWithRequiredData: IComment = {
-  id: 19354,
+  id: 23314,
   content: '../fake-data/blob/hipster.txt',
 };
 
 export const sampleWithPartialData: IComment = {
-  id: 20727,
+  id: 13813,
   content: '../fake-data/blob/hipster.txt',
+  createdDate: dayjs('2024-12-08T18:01'),
 };
 
 export const sampleWithFullData: IComment = {
-  id: 5851,
+  id: 6525,
   content: '../fake-data/blob/hipster.txt',
-  createdDate: dayjs('2024-08-29T21:43'),
+  createdDate: dayjs('2024-12-09T08:22'),
 };
 
 export const sampleWithNewData: NewComment = {

@@ -49,10 +49,10 @@ describe('Notification Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call User query and add missing value', () => {
       const notification: INotification = { id: 456 };
-      const user: IUser = { id: '9d1e8f28-d714-4778-8e80-fb4bc4847ce9' };
+      const user: IUser = { id: 'f889c600-0198-46bd-93b6-8cb4024c3ab9' };
       notification.user = user;
 
-      const userCollection: IUser[] = [{ id: 'bdedf0ed-a268-4ae6-9751-2ef072665b10' }];
+      const userCollection: IUser[] = [{ id: '9df79e2d-6e2e-4d9c-a0f0-9fbff5b9c100' }];
       jest.spyOn(userService, 'query').mockReturnValue(of(new HttpResponse({ body: userCollection })));
       const additionalUsers = [user];
       const expectedCollection: IUser[] = [...additionalUsers, ...userCollection];
@@ -71,7 +71,7 @@ describe('Notification Management Update Component', () => {
 
     it('Should update editForm', () => {
       const notification: INotification = { id: 456 };
-      const user: IUser = { id: '5cd8f498-2aaa-45fc-9c89-ed28d74e73be' };
+      const user: IUser = { id: '7c4b47f0-7c7a-40c6-a21b-7d679766d47e' };
       notification.user = user;
 
       activatedRoute.data = of({ notification });

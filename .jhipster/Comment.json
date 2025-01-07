@@ -1,13 +1,13 @@
 {
   "annotations": {
-    "changelogDate": "20240830123914"
+    "changelogDate": "20241209143950"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "content",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text",
+      "fieldType": "TextBlob",
       "fieldValidateRules": ["required"]
     },
     {
@@ -19,18 +19,20 @@
   "pagination": "infinite-scroll",
   "relationships": [
     {
-      "otherEntityName": "idea",
-      "relationshipName": "relatedIdea",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
-    },
-    {
       "otherEntityName": "user",
       "relationshipName": "author",
       "relationshipSide": "left",
       "relationshipType": "many-to-one",
       "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "idea",
+      "otherEntityRelationshipName": "comments",
+      "relationshipName": "idea",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }

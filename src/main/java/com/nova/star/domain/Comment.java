@@ -33,14 +33,13 @@ public class Comment implements Serializable {
     private ZonedDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "comments", "author", "ideaCategory", "assignedReward", "category", "reward" }, allowSetters = true)
-    private Idea relatedIdea;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "comments", "author", "ideaCategory", "assignedReward", "category", "reward" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "comments", "votes", "likeHistories", "author", "assignedReward", "manager", "category" },
+        allowSetters = true
+    )
     private Idea idea;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -82,19 +81,6 @@ public class Comment implements Serializable {
 
     public void setCreatedDate(ZonedDateTime createdDate) {
         this.createdDate = createdDate;
-    }
-
-    public Idea getRelatedIdea() {
-        return this.relatedIdea;
-    }
-
-    public void setRelatedIdea(Idea idea) {
-        this.relatedIdea = idea;
-    }
-
-    public Comment relatedIdea(Idea idea) {
-        this.setRelatedIdea(idea);
-        return this;
     }
 
     public User getAuthor() {

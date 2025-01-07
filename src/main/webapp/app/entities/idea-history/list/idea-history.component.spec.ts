@@ -91,7 +91,7 @@ describe('IdeaHistory Management Component', () => {
     it('Should forward to ideaHistoryService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getIdeaHistoryIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = comp.trackId(entity);
       expect(service.getIdeaHistoryIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });

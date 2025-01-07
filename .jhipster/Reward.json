@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20240830123915"
+    "changelogDate": "20241209143952"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "name",
@@ -18,11 +19,13 @@
   "pagination": "infinite-scroll",
   "relationships": [
     {
-      "otherEntityName": "idea",
-      "relationshipName": "ideas",
+      "otherEntityName": "rewardHistory",
+      "otherEntityRelationshipName": "reward",
+      "relationshipName": "rewardHistories",
       "relationshipSide": "left",
       "relationshipType": "one-to-many"
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }

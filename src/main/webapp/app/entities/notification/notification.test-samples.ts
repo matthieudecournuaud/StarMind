@@ -3,32 +3,31 @@ import dayjs from 'dayjs/esm';
 import { INotification, NewNotification } from './notification.model';
 
 export const sampleWithRequiredData: INotification = {
-  id: 13260,
-  message: 'bien que derrière crac',
-  type: 'que',
-  sentDate: dayjs('2024-08-30T02:42'),
+  id: 16842,
+  message: 'doucement contribuer aigre',
+  type: 'via',
+  sentDate: dayjs('2024-12-08T22:00'),
 };
 
 export const sampleWithPartialData: INotification = {
-  id: 23894,
-  message: 'coac coac',
-  type: 'coupable âcre',
-  sentDate: dayjs('2024-08-30T10:34'),
-  read: true,
+  id: 25219,
+  message: 'zzzz obliger',
+  type: 'membre du personnel dans la mesure où solitaire',
+  sentDate: dayjs('2024-12-09T08:36'),
 };
 
 export const sampleWithFullData: INotification = {
-  id: 2160,
-  message: 'emmener',
-  type: 'désirer areu areu miaou',
-  sentDate: dayjs('2024-08-29T14:24'),
-  read: true,
+  id: 4703,
+  message: 'très dès',
+  type: 'mélancolique partout certainement',
+  sentDate: dayjs('2024-12-09T11:23'),
+  read: false,
 };
 
 export const sampleWithNewData: NewNotification = {
-  message: 'du fait que',
-  type: 'avex responsable gigantesque',
-  sentDate: dayjs('2024-08-30T04:02'),
+  message: 'coin-coin impromptu oups',
+  type: 'sortir si',
+  sentDate: dayjs('2024-12-09T01:28'),
   id: null,
 };
 

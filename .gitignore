@@ -151,7 +151,3 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
-######################
-# Sonar
-######################
-sonar-project.properties

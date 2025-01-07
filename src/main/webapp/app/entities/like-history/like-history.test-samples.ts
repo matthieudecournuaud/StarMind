@@ -3,28 +3,30 @@ import dayjs from 'dayjs/esm';
 import { ILikeHistory, NewLikeHistory } from './like-history.model';
 
 export const sampleWithRequiredData: ILikeHistory = {
-  id: 12148,
-  action: 'apprendre vlan',
-  actionDate: dayjs('2024-08-30T04:00'),
+  id: 1376,
+  action: 'chef de cuisine',
+  actionDate: dayjs('2024-12-09T09:41'),
 };
 
 export const sampleWithPartialData: ILikeHistory = {
-  id: 10828,
-  action: 'du côté de',
-  actionDate: dayjs('2024-08-30T00:02'),
+  id: 32026,
+  action: 'exprès',
+  actionDate: dayjs('2024-12-09T10:49'),
+  oldLikes: 4065,
+  newLikes: 24722,
 };
 
 export const sampleWithFullData: ILikeHistory = {
-  id: 25432,
-  action: 'circulaire mince',
-  actionDate: dayjs('2024-08-30T00:47'),
-  oldLikes: 'vide',
-  newLikes: 'avant que',
+  id: 17219,
+  action: 'sous grâce à police',
+  actionDate: dayjs('2024-12-08T23:06'),
+  oldLikes: 4384,
+  newLikes: 6278,
 };
 
 export const sampleWithNewData: NewLikeHistory = {
-  action: 'de peur que',
-  actionDate: dayjs('2024-08-30T11:43'),
+  action: 'durant',
+  actionDate: dayjs('2024-12-08T15:20'),
   id: null,
 };
 

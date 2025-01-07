@@ -13,6 +13,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nova.star.IntegrationTest;
 import com.nova.star.domain.LikeHistory;
 import com.nova.star.repository.LikeHistoryRepository;
+import com.nova.star.service.dto.LikeHistoryDTO;
+import com.nova.star.service.mapper.LikeHistoryMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -44,11 +46,11 @@ class LikeHistoryResourceIT {
     private static final ZonedDateTime DEFAULT_ACTION_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_ACTION_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final String DEFAULT_OLD_LIKES = "AAAAAAAAAA";
-    private static final String UPDATED_OLD_LIKES = "BBBBBBBBBB";
+    private static final Integer DEFAULT_OLD_LIKES = 1;
+    private static final Integer UPDATED_OLD_LIKES = 2;
 
-    private static final String DEFAULT_NEW_LIKES = "AAAAAAAAAA";
-    private static final String UPDATED_NEW_LIKES = "BBBBBBBBBB";
+    private static final Integer DEFAULT_NEW_LIKES = 1;
+    private static final Integer UPDATED_NEW_LIKES = 2;
 
     private static final String ENTITY_API_URL = "/api/like-histories";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -61,6 +63,9 @@ class LikeHistoryResourceIT {
 
     @Autowired
     private LikeHistoryRepository likeHistoryRepository;
+
+    @Autowired
+    private LikeHistoryMapper likeHistoryMapper;
 
     @Autowired
     private EntityManager em;
@@ -118,20 +123,22 @@ class LikeHistoryResourceIT {
     void createLikeHistory() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the LikeHistory
-        var returnedLikeHistory = om.readValue(
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
+        var returnedLikeHistoryDTO = om.readValue(
             restLikeHistoryMockMvc
                 .perform(
-                    post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistory))
+                    post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistoryDTO))
                 )
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            LikeHistory.class
+            LikeHistoryDTO.class
         );
 
         // Validate the LikeHistory in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedLikeHistory = likeHistoryMapper.toEntity(returnedLikeHistoryDTO);
         assertLikeHistoryUpdatableFieldsEquals(returnedLikeHistory, getPersistedLikeHistory(returnedLikeHistory));
 
         insertedLikeHistory = returnedLikeHistory;
@@ -142,12 +149,15 @@ class LikeHistoryResourceIT {
     void createLikeHistoryWithExistingId() throws Exception {
         // Create the LikeHistory with an existing ID
         likeHistory.setId(1L);
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restLikeHistoryMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistory)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the LikeHistory in the database
@@ -162,9 +172,12 @@ class LikeHistoryResourceIT {
         likeHistory.setAction(null);
 
         // Create the LikeHistory, which fails.
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
 
         restLikeHistoryMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistory)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -178,9 +191,12 @@ class LikeHistoryResourceIT {
         likeHistory.setActionDate(null);
 
         // Create the LikeHistory, which fails.
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
 
         restLikeHistoryMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistory)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistoryDTO))
+            )
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -242,13 +258,14 @@ class LikeHistoryResourceIT {
         // Disconnect from session so that the updates on updatedLikeHistory are not directly saved in db
         em.detach(updatedLikeHistory);
         updatedLikeHistory.action(UPDATED_ACTION).actionDate(UPDATED_ACTION_DATE).oldLikes(UPDATED_OLD_LIKES).newLikes(UPDATED_NEW_LIKES);
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(updatedLikeHistory);
 
         restLikeHistoryMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedLikeHistory.getId())
+                put(ENTITY_API_URL_ID, likeHistoryDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(updatedLikeHistory))
+                    .content(om.writeValueAsBytes(likeHistoryDTO))
             )
             .andExpect(status().isOk());
 
@@ -263,13 +280,16 @@ class LikeHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         likeHistory.setId(longCount.incrementAndGet());
 
+        // Create the LikeHistory
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restLikeHistoryMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, likeHistory.getId())
+                put(ENTITY_API_URL_ID, likeHistoryDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(likeHistory))
+                    .content(om.writeValueAsBytes(likeHistoryDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -283,13 +303,16 @@ class LikeHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         likeHistory.setId(longCount.incrementAndGet());
 
+        // Create the LikeHistory
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restLikeHistoryMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(likeHistory))
+                    .content(om.writeValueAsBytes(likeHistoryDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -303,9 +326,12 @@ class LikeHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         likeHistory.setId(longCount.incrementAndGet());
 
+        // Create the LikeHistory
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restLikeHistoryMockMvc
-            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistory)))
+            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(likeHistoryDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the LikeHistory in the database
@@ -387,13 +413,16 @@ class LikeHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         likeHistory.setId(longCount.incrementAndGet());
 
+        // Create the LikeHistory
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restLikeHistoryMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, likeHistory.getId())
+                patch(ENTITY_API_URL_ID, likeHistoryDTO.getId())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(likeHistory))
+                    .content(om.writeValueAsBytes(likeHistoryDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -407,13 +436,16 @@ class LikeHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         likeHistory.setId(longCount.incrementAndGet());
 
+        // Create the LikeHistory
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restLikeHistoryMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(likeHistory))
+                    .content(om.writeValueAsBytes(likeHistoryDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -427,10 +459,13 @@ class LikeHistoryResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         likeHistory.setId(longCount.incrementAndGet());
 
+        // Create the LikeHistory
+        LikeHistoryDTO likeHistoryDTO = likeHistoryMapper.toDto(likeHistory);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restLikeHistoryMockMvc
             .perform(
-                patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(likeHistory))
+                patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(likeHistoryDTO))
             )
             .andExpect(status().isMethodNotAllowed());
 

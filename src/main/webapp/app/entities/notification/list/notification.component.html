@@ -80,7 +80,7 @@
           </tr>
         </thead>
         <tbody>
-          @for (notification of notifications; track trackId) {
+          @for (notification of notifications; track trackId(notification)) {
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/notification', notification.id, 'view']">{{ notification.id }}</a>

@@ -34,14 +34,14 @@ export class NotificationComponent implements OnInit {
 
   sortState = sortStateSignal({});
 
-  public router = inject(Router);
-  protected notificationService = inject(NotificationService);
-  protected activatedRoute = inject(ActivatedRoute);
-  protected sortService = inject(SortService);
+  public readonly router = inject(Router);
+  protected readonly notificationService = inject(NotificationService);
+  protected readonly activatedRoute = inject(ActivatedRoute);
+  protected readonly sortService = inject(SortService);
   protected modalService = inject(NgbModal);
   protected ngZone = inject(NgZone);
 
-  trackId = (_index: number, item: INotification): number => this.notificationService.getNotificationIdentifier(item);
+  trackId = (item: INotification): number => this.notificationService.getNotificationIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])

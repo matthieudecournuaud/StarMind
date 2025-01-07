@@ -21,8 +21,6 @@ type CategoryFormGroupContent = {
   name: FormControl<ICategory['name']>;
   description: FormControl<ICategory['description']>;
   level: FormControl<ICategory['level']>;
-  parentCategory: FormControl<ICategory['parentCategory']>;
-  superCategory: FormControl<ICategory['superCategory']>;
 };
 
 export type CategoryFormGroup = FormGroup<CategoryFormGroupContent>;
@@ -46,11 +44,7 @@ export class CategoryFormService {
         validators: [Validators.required],
       }),
       description: new FormControl(categoryRawValue.description),
-      level: new FormControl(categoryRawValue.level, {
-        validators: [Validators.required],
-      }),
-      parentCategory: new FormControl(categoryRawValue.parentCategory),
-      superCategory: new FormControl(categoryRawValue.superCategory),
+      level: new FormControl(categoryRawValue.level),
     });
   }
 

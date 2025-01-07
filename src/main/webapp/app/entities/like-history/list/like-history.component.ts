@@ -45,15 +45,15 @@ export class LikeHistoryComponent implements OnInit {
   hasMorePage = computed(() => !!this.links().next);
   isFirstFetch = computed(() => Object.keys(this.links()).length === 0);
 
-  public router = inject(Router);
-  protected likeHistoryService = inject(LikeHistoryService);
-  protected activatedRoute = inject(ActivatedRoute);
-  protected sortService = inject(SortService);
+  public readonly router = inject(Router);
+  protected readonly likeHistoryService = inject(LikeHistoryService);
+  protected readonly activatedRoute = inject(ActivatedRoute);
+  protected readonly sortService = inject(SortService);
   protected parseLinks = inject(ParseLinks);
   protected modalService = inject(NgbModal);
   protected ngZone = inject(NgZone);
 
-  trackId = (_index: number, item: ILikeHistory): number => this.likeHistoryService.getLikeHistoryIdentifier(item);
+  trackId = (item: ILikeHistory): number => this.likeHistoryService.getLikeHistoryIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])

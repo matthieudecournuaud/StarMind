@@ -63,23 +63,11 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="parentCategory.id">
-              <div class="d-flex">
-                <span jhiTranslate="starMindApp.category.parentCategory">Parent Category</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="superCategory.id">
-              <div class="d-flex">
-                <span jhiTranslate="starMindApp.category.superCategory">Super Category</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
-          @for (category of categories; track trackId) {
+          @for (category of categories; track trackId(category)) {
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/category', category.id, 'view']">{{ category.id }}</a>
@@ -87,20 +75,6 @@
               <td>{{ category.name }}</td>
               <td>{{ category.description }}</td>
               <td>{{ category.level }}</td>
-              <td>
-                @if (category.parentCategory) {
-                  <div>
-                    <a [routerLink]="['/category', category.parentCategory.id, 'view']">{{ category.parentCategory.id }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @if (category.superCategory) {
-                  <div>
-                    <a [routerLink]="['/category', category.superCategory.id, 'view']">{{ category.superCategory.id }}</a>
-                  </div>
-                }
-              </td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/category', category.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20240830123917"
+    "changelogDate": "20241209143955"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "action",
@@ -16,25 +17,26 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldType": "TextBlob"
     }
   ],
   "name": "RewardHistory",
   "pagination": "infinite-scroll",
   "relationships": [
     {
-      "otherEntityName": "reward",
-      "relationshipName": "reward",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
-    },
-    {
       "otherEntityName": "idea",
       "relationshipName": "idea",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "reward",
+      "otherEntityRelationshipName": "rewardHistories",
+      "relationshipName": "reward",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }

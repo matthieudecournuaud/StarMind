@@ -1,0 +1,50 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (prospectBoard(); as prospectBoardRef) {
+      <div>
+        <h2 data-cy="prospectBoardDetailsHeading"><span jhiTranslate="starMindApp.prospectBoard.detail.title">Prospect Board</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ prospectBoardRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.prospectBoard.name">Name</span></dt>
+          <dd>
+            <span>{{ prospectBoardRef.name }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.prospectBoard.description">Description</span></dt>
+          <dd>
+            <span>{{ prospectBoardRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.prospectBoard.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ prospectBoardRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.prospectBoard.modifiedDate">Modified Date</span></dt>
+          <dd>
+            <span>{{ prospectBoardRef.modifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="starMindApp.prospectBoard.owner">Owner</span></dt>
+          <dd>
+            <span>{{ prospectBoardRef.owner?.id }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Retour</span>
+        </button>
+
+        <button type="button" [routerLink]="['/prospect-board', prospectBoardRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editer</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

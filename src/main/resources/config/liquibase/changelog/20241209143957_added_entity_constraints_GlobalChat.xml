@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity GlobalChat.
+    -->
+    <changeSet id="20241209143957-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="global_chat_id"
+                                 baseTableName="rel_global_chat__users"
+                                 constraintName="fk_rel_global_chat__users__global_chat_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="global_chat"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="users_id"
+                                 baseTableName="rel_global_chat__users"
+                                 constraintName="fk_rel_global_chat__users__users_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+    </changeSet>
+</databaseChangeLog>

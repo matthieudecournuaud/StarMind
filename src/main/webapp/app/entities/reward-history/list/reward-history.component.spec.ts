@@ -91,7 +91,7 @@ describe('RewardHistory Management Component', () => {
     it('Should forward to rewardHistoryService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getRewardHistoryIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = comp.trackId(entity);
       expect(service.getRewardHistoryIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });

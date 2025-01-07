@@ -21,10 +21,7 @@
       "name": "Name",
       "description": "Description",
       "level": "Level",
-      "ideas": "Ideas",
-      "subcategories": "Subcategories",
-      "parentCategory": "Parent Category",
-      "superCategory": "Super Category"
+      "ideas": "Ideas"
     }
   }
 }

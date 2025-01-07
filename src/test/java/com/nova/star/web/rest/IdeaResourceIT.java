@@ -16,6 +16,8 @@ import com.nova.star.domain.enumeration.IdeaStatus;
 import com.nova.star.domain.enumeration.RewardType;
 import com.nova.star.repository.IdeaRepository;
 import com.nova.star.repository.UserRepository;
+import com.nova.star.service.dto.IdeaDTO;
+import com.nova.star.service.mapper.IdeaMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -50,20 +52,29 @@ class IdeaResourceIT {
     private static final IdeaStatus DEFAULT_STATUS = IdeaStatus.OPEN;
     private static final IdeaStatus UPDATED_STATUS = IdeaStatus.IN_PROGRESS;
 
+    private static final Boolean DEFAULT_IS_CONFIDENTIAL = false;
+    private static final Boolean UPDATED_IS_CONFIDENTIAL = true;
+
     private static final Boolean DEFAULT_VALIDATION = false;
     private static final Boolean UPDATED_VALIDATION = true;
 
     private static final RewardType DEFAULT_REWARD_TYPE = RewardType.BRONZE;
     private static final RewardType UPDATED_REWARD_TYPE = RewardType.ARGENT;
 
-    private static final String DEFAULT_LIKES = "AAAAAAAAAA";
-    private static final String UPDATED_LIKES = "BBBBBBBBBB";
+    private static final Integer DEFAULT_LIKES = 1;
+    private static final Integer UPDATED_LIKES = 2;
 
     private static final ZonedDateTime DEFAULT_CREATED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_CREATED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     private static final ZonedDateTime DEFAULT_MODIFIED_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_MODIFIED_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final Boolean DEFAULT_IS_PUBLIC = false;
+    private static final Boolean UPDATED_IS_PUBLIC = true;
+
+    private static final String DEFAULT_IMPACT = "AAAAAAAAAA";
+    private static final String UPDATED_IMPACT = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/ideas";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -79,6 +90,9 @@ class IdeaResourceIT {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private IdeaMapper ideaMapper;
 
     @Autowired
     private EntityManager em;
@@ -101,11 +115,14 @@ class IdeaResourceIT {
             .title(DEFAULT_TITLE)
             .description(DEFAULT_DESCRIPTION)
             .status(DEFAULT_STATUS)
+            .isConfidential(DEFAULT_IS_CONFIDENTIAL)
             .validation(DEFAULT_VALIDATION)
             .rewardType(DEFAULT_REWARD_TYPE)
             .likes(DEFAULT_LIKES)
             .createdDate(DEFAULT_CREATED_DATE)
-            .modifiedDate(DEFAULT_MODIFIED_DATE);
+            .modifiedDate(DEFAULT_MODIFIED_DATE)
+            .isPublic(DEFAULT_IS_PUBLIC)
+            .impact(DEFAULT_IMPACT);
     }
 
     /**
@@ -119,11 +136,14 @@ class IdeaResourceIT {
             .title(UPDATED_TITLE)
             .description(UPDATED_DESCRIPTION)
             .status(UPDATED_STATUS)
+            .isConfidential(UPDATED_IS_CONFIDENTIAL)
             .validation(UPDATED_VALIDATION)
             .rewardType(UPDATED_REWARD_TYPE)
             .likes(UPDATED_LIKES)
             .createdDate(UPDATED_CREATED_DATE)
-            .modifiedDate(UPDATED_MODIFIED_DATE);
+            .modifiedDate(UPDATED_MODIFIED_DATE)
+            .isPublic(UPDATED_IS_PUBLIC)
+            .impact(UPDATED_IMPACT);
     }
 
     @BeforeEach
@@ -145,18 +165,20 @@ class IdeaResourceIT {
     void createIdea() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Idea
-        var returnedIdea = om.readValue(
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
+        var returnedIdeaDTO = om.readValue(
             restIdeaMockMvc
-                .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(idea)))
+                .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaDTO)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            Idea.class
+            IdeaDTO.class
         );
 
         // Validate the Idea in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedIdea = ideaMapper.toEntity(returnedIdeaDTO);
         assertIdeaUpdatableFieldsEquals(returnedIdea, getPersistedIdea(returnedIdea));
 
         insertedIdea = returnedIdea;
@@ -167,12 +189,13 @@ class IdeaResourceIT {
     void createIdeaWithExistingId() throws Exception {
         // Create the Idea with an existing ID
         idea.setId(1L);
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restIdeaMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(idea)))
+            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Idea in the database
@@ -187,9 +210,10 @@ class IdeaResourceIT {
         idea.setTitle(null);
 
         // Create the Idea, which fails.
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
 
         restIdeaMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(idea)))
+            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaDTO)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -203,9 +227,27 @@ class IdeaResourceIT {
         idea.setStatus(null);
 
         // Create the Idea, which fails.
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
 
         restIdeaMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(idea)))
+            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaDTO)))
+            .andExpect(status().isBadRequest());
+
+        assertSameRepositoryCount(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    void checkIsConfidentialIsRequired() throws Exception {
+        long databaseSizeBeforeTest = getRepositoryCount();
+        // set the field null
+        idea.setIsConfidential(null);
+
+        // Create the Idea, which fails.
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
+
+        restIdeaMockMvc
+            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaDTO)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -226,11 +268,14 @@ class IdeaResourceIT {
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].status").value(hasItem(DEFAULT_STATUS.toString())))
+            .andExpect(jsonPath("$.[*].isConfidential").value(hasItem(DEFAULT_IS_CONFIDENTIAL.booleanValue())))
             .andExpect(jsonPath("$.[*].validation").value(hasItem(DEFAULT_VALIDATION.booleanValue())))
             .andExpect(jsonPath("$.[*].rewardType").value(hasItem(DEFAULT_REWARD_TYPE.toString())))
             .andExpect(jsonPath("$.[*].likes").value(hasItem(DEFAULT_LIKES)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(sameInstant(DEFAULT_CREATED_DATE))))
-            .andExpect(jsonPath("$.[*].modifiedDate").value(hasItem(sameInstant(DEFAULT_MODIFIED_DATE))));
+            .andExpect(jsonPath("$.[*].modifiedDate").value(hasItem(sameInstant(DEFAULT_MODIFIED_DATE))))
+            .andExpect(jsonPath("$.[*].isPublic").value(hasItem(DEFAULT_IS_PUBLIC.booleanValue())))
+            .andExpect(jsonPath("$.[*].impact").value(hasItem(DEFAULT_IMPACT)));
     }
 
     @Test
@@ -248,11 +293,14 @@ class IdeaResourceIT {
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.status").value(DEFAULT_STATUS.toString()))
+            .andExpect(jsonPath("$.isConfidential").value(DEFAULT_IS_CONFIDENTIAL.booleanValue()))
             .andExpect(jsonPath("$.validation").value(DEFAULT_VALIDATION.booleanValue()))
             .andExpect(jsonPath("$.rewardType").value(DEFAULT_REWARD_TYPE.toString()))
             .andExpect(jsonPath("$.likes").value(DEFAULT_LIKES))
             .andExpect(jsonPath("$.createdDate").value(sameInstant(DEFAULT_CREATED_DATE)))
-            .andExpect(jsonPath("$.modifiedDate").value(sameInstant(DEFAULT_MODIFIED_DATE)));
+            .andExpect(jsonPath("$.modifiedDate").value(sameInstant(DEFAULT_MODIFIED_DATE)))
+            .andExpect(jsonPath("$.isPublic").value(DEFAULT_IS_PUBLIC.booleanValue()))
+            .andExpect(jsonPath("$.impact").value(DEFAULT_IMPACT));
     }
 
     @Test
@@ -278,18 +326,22 @@ class IdeaResourceIT {
             .title(UPDATED_TITLE)
             .description(UPDATED_DESCRIPTION)
             .status(UPDATED_STATUS)
+            .isConfidential(UPDATED_IS_CONFIDENTIAL)
             .validation(UPDATED_VALIDATION)
             .rewardType(UPDATED_REWARD_TYPE)
             .likes(UPDATED_LIKES)
             .createdDate(UPDATED_CREATED_DATE)
-            .modifiedDate(UPDATED_MODIFIED_DATE);
+            .modifiedDate(UPDATED_MODIFIED_DATE)
+            .isPublic(UPDATED_IS_PUBLIC)
+            .impact(UPDATED_IMPACT);
+        IdeaDTO ideaDTO = ideaMapper.toDto(updatedIdea);
 
         restIdeaMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedIdea.getId())
+                put(ENTITY_API_URL_ID, ideaDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(updatedIdea))
+                    .content(om.writeValueAsBytes(ideaDTO))
             )
             .andExpect(status().isOk());
 
@@ -304,13 +356,16 @@ class IdeaResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         idea.setId(longCount.incrementAndGet());
 
+        // Create the Idea
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIdeaMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, idea.getId())
+                put(ENTITY_API_URL_ID, ideaDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(idea))
+                    .content(om.writeValueAsBytes(ideaDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -324,13 +379,16 @@ class IdeaResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         idea.setId(longCount.incrementAndGet());
 
+        // Create the Idea
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIdeaMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(idea))
+                    .content(om.writeValueAsBytes(ideaDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -344,9 +402,12 @@ class IdeaResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         idea.setId(longCount.incrementAndGet());
 
+        // Create the Idea
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIdeaMockMvc
-            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(idea)))
+            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(ideaDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Idea in the database
@@ -365,13 +426,7 @@ class IdeaResourceIT {
         Idea partialUpdatedIdea = new Idea();
         partialUpdatedIdea.setId(idea.getId());
 
-        partialUpdatedIdea
-            .title(UPDATED_TITLE)
-            .status(UPDATED_STATUS)
-            .validation(UPDATED_VALIDATION)
-            .rewardType(UPDATED_REWARD_TYPE)
-            .createdDate(UPDATED_CREATED_DATE)
-            .modifiedDate(UPDATED_MODIFIED_DATE);
+        partialUpdatedIdea.rewardType(UPDATED_REWARD_TYPE).modifiedDate(UPDATED_MODIFIED_DATE).impact(UPDATED_IMPACT);
 
         restIdeaMockMvc
             .perform(
@@ -404,11 +459,14 @@ class IdeaResourceIT {
             .title(UPDATED_TITLE)
             .description(UPDATED_DESCRIPTION)
             .status(UPDATED_STATUS)
+            .isConfidential(UPDATED_IS_CONFIDENTIAL)
             .validation(UPDATED_VALIDATION)
             .rewardType(UPDATED_REWARD_TYPE)
             .likes(UPDATED_LIKES)
             .createdDate(UPDATED_CREATED_DATE)
-            .modifiedDate(UPDATED_MODIFIED_DATE);
+            .modifiedDate(UPDATED_MODIFIED_DATE)
+            .isPublic(UPDATED_IS_PUBLIC)
+            .impact(UPDATED_IMPACT);
 
         restIdeaMockMvc
             .perform(
@@ -431,13 +489,16 @@ class IdeaResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         idea.setId(longCount.incrementAndGet());
 
+        // Create the Idea
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIdeaMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, idea.getId())
+                patch(ENTITY_API_URL_ID, ideaDTO.getId())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(idea))
+                    .content(om.writeValueAsBytes(ideaDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -451,13 +512,16 @@ class IdeaResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         idea.setId(longCount.incrementAndGet());
 
+        // Create the Idea
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIdeaMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(idea))
+                    .content(om.writeValueAsBytes(ideaDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -471,9 +535,12 @@ class IdeaResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         idea.setId(longCount.incrementAndGet());
 
+        // Create the Idea
+        IdeaDTO ideaDTO = ideaMapper.toDto(idea);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIdeaMockMvc
-            .perform(patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(idea)))
+            .perform(patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(ideaDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Idea in the database

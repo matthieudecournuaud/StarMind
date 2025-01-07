@@ -12,6 +12,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nova.star.IntegrationTest;
 import com.nova.star.domain.Reward;
 import com.nova.star.repository.RewardRepository;
+import com.nova.star.service.dto.RewardDTO;
+import com.nova.star.service.mapper.RewardMapper;
 import jakarta.persistence.EntityManager;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -50,6 +52,9 @@ class RewardResourceIT {
 
     @Autowired
     private RewardRepository rewardRepository;
+
+    @Autowired
+    private RewardMapper rewardMapper;
 
     @Autowired
     private EntityManager em;
@@ -99,18 +104,20 @@ class RewardResourceIT {
     void createReward() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Reward
-        var returnedReward = om.readValue(
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
+        var returnedRewardDTO = om.readValue(
             restRewardMockMvc
-                .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(reward)))
+                .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rewardDTO)))
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            Reward.class
+            RewardDTO.class
         );
 
         // Validate the Reward in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedReward = rewardMapper.toEntity(returnedRewardDTO);
         assertRewardUpdatableFieldsEquals(returnedReward, getPersistedReward(returnedReward));
 
         insertedReward = returnedReward;
@@ -121,12 +128,13 @@ class RewardResourceIT {
     void createRewardWithExistingId() throws Exception {
         // Create the Reward with an existing ID
         reward.setId(1L);
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restRewardMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(reward)))
+            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rewardDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Reward in the database
@@ -141,9 +149,10 @@ class RewardResourceIT {
         reward.setName(null);
 
         // Create the Reward, which fails.
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
 
         restRewardMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(reward)))
+            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rewardDTO)))
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -201,13 +210,14 @@ class RewardResourceIT {
         // Disconnect from session so that the updates on updatedReward are not directly saved in db
         em.detach(updatedReward);
         updatedReward.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        RewardDTO rewardDTO = rewardMapper.toDto(updatedReward);
 
         restRewardMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedReward.getId())
+                put(ENTITY_API_URL_ID, rewardDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(updatedReward))
+                    .content(om.writeValueAsBytes(rewardDTO))
             )
             .andExpect(status().isOk());
 
@@ -222,13 +232,16 @@ class RewardResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         reward.setId(longCount.incrementAndGet());
 
+        // Create the Reward
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restRewardMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, reward.getId())
+                put(ENTITY_API_URL_ID, rewardDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(reward))
+                    .content(om.writeValueAsBytes(rewardDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -242,13 +255,16 @@ class RewardResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         reward.setId(longCount.incrementAndGet());
 
+        // Create the Reward
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restRewardMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(reward))
+                    .content(om.writeValueAsBytes(rewardDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -262,9 +278,12 @@ class RewardResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         reward.setId(longCount.incrementAndGet());
 
+        // Create the Reward
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restRewardMockMvc
-            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(reward)))
+            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(rewardDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Reward in the database
@@ -282,8 +301,6 @@ class RewardResourceIT {
         // Update the reward using partial update
         Reward partialUpdatedReward = new Reward();
         partialUpdatedReward.setId(reward.getId());
-
-        partialUpdatedReward.name(UPDATED_NAME);
 
         restRewardMockMvc
             .perform(
@@ -335,13 +352,16 @@ class RewardResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         reward.setId(longCount.incrementAndGet());
 
+        // Create the Reward
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restRewardMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, reward.getId())
+                patch(ENTITY_API_URL_ID, rewardDTO.getId())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(reward))
+                    .content(om.writeValueAsBytes(rewardDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -355,13 +375,16 @@ class RewardResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         reward.setId(longCount.incrementAndGet());
 
+        // Create the Reward
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restRewardMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(reward))
+                    .content(om.writeValueAsBytes(rewardDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -375,9 +398,14 @@ class RewardResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         reward.setId(longCount.incrementAndGet());
 
+        // Create the Reward
+        RewardDTO rewardDTO = rewardMapper.toDto(reward);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restRewardMockMvc
-            .perform(patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(reward)))
+            .perform(
+                patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(rewardDTO))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Reward in the database

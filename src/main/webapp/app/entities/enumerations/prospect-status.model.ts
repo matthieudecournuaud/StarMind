@@ -1,0 +1,11 @@
+export enum ProspectStatus {
+  NEW = 'NEW',
+
+  CONTACTED = 'CONTACTED',
+
+  INTERVIEW_SCHEDULED = 'INTERVIEW_SCHEDULED',
+
+  HIRED = 'HIRED',
+
+  REJECTED = 'REJECTED',
+}

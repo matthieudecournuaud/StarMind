@@ -91,7 +91,7 @@ describe('Notification Management Component', () => {
     it('Should forward to notificationService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getNotificationIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = comp.trackId(entity);
       expect(service.getNotificationIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });

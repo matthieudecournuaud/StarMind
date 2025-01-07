@@ -80,7 +80,7 @@
           </tr>
         </thead>
         <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
-          @for (likeHistory of likeHistories; track trackId) {
+          @for (likeHistory of likeHistories; track trackId(likeHistory)) {
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/like-history', likeHistory.id, 'view']">{{ likeHistory.id }}</a>

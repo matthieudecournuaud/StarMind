@@ -21,17 +21,21 @@
       "title": "Title",
       "description": "Description",
       "status": "Status",
+      "isConfidential": "Is Confidential",
       "validation": "Validation",
       "rewardType": "Reward Type",
       "likes": "Likes",
       "createdDate": "Created Date",
       "modifiedDate": "Modified Date",
+      "isPublic": "Is Public",
+      "impact": "Impact",
       "comments": "Comments",
+      "votes": "Votes",
+      "likeHistories": "Like Histories",
       "author": "Author",
-      "ideaCategory": "Idea Category",
       "assignedReward": "Assigned Reward",
-      "category": "Category",
-      "reward": "Reward"
+      "manager": "Manager",
+      "category": "Category"
     }
   }
 }

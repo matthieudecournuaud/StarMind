@@ -91,7 +91,7 @@ describe('Category Management Component', () => {
     it('Should forward to categoryService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getCategoryIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = comp.trackId(entity);
       expect(service.getCategoryIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });

@@ -24,18 +24,6 @@ class CommentTest {
     }
 
     @Test
-    void relatedIdeaTest() {
-        Comment comment = getCommentRandomSampleGenerator();
-        Idea ideaBack = getIdeaRandomSampleGenerator();
-
-        comment.setRelatedIdea(ideaBack);
-        assertThat(comment.getRelatedIdea()).isEqualTo(ideaBack);
-
-        comment.relatedIdea(null);
-        assertThat(comment.getRelatedIdea()).isNull();
-    }
-
-    @Test
     void ideaTest() {
         Comment comment = getCommentRandomSampleGenerator();
         Idea ideaBack = getIdeaRandomSampleGenerator();

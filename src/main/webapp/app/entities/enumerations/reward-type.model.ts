@@ -11,5 +11,5 @@ export enum RewardType {
 
   TITANIUM = 'TITANIUM',
 
-  STARMIND = 'STARMIND',
+  ELYSIUM = 'ELYSIUM',
 }

@@ -91,7 +91,7 @@ describe('Reward Management Component', () => {
     it('Should forward to rewardService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getRewardIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = comp.trackId(entity);
       expect(service.getRewardIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });

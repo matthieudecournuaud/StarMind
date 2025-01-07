@@ -46,16 +46,16 @@ export class IdeaHistoryComponent implements OnInit {
   hasMorePage = computed(() => !!this.links().next);
   isFirstFetch = computed(() => Object.keys(this.links()).length === 0);
 
-  public router = inject(Router);
-  protected ideaHistoryService = inject(IdeaHistoryService);
-  protected activatedRoute = inject(ActivatedRoute);
-  protected sortService = inject(SortService);
+  public readonly router = inject(Router);
+  protected readonly ideaHistoryService = inject(IdeaHistoryService);
+  protected readonly activatedRoute = inject(ActivatedRoute);
+  protected readonly sortService = inject(SortService);
   protected parseLinks = inject(ParseLinks);
   protected dataUtils = inject(DataUtils);
   protected modalService = inject(NgbModal);
   protected ngZone = inject(NgZone);
 
-  trackId = (_index: number, item: IIdeaHistory): number => this.ideaHistoryService.getIdeaHistoryIdentifier(item);
+  trackId = (item: IIdeaHistory): number => this.ideaHistoryService.getIdeaHistoryIdentifier(item);
 
   ngOnInit(): void {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])

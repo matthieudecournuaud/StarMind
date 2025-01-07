@@ -14,6 +14,8 @@ import com.nova.star.IntegrationTest;
 import com.nova.star.domain.Notification;
 import com.nova.star.repository.NotificationRepository;
 import com.nova.star.repository.UserRepository;
+import com.nova.star.service.dto.NotificationDTO;
+import com.nova.star.service.mapper.NotificationMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -67,6 +69,9 @@ class NotificationResourceIT {
     private UserRepository userRepository;
 
     @Autowired
+    private NotificationMapper notificationMapper;
+
+    @Autowired
     private EntityManager em;
 
     @Autowired
@@ -115,20 +120,22 @@ class NotificationResourceIT {
     void createNotification() throws Exception {
         long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Notification
-        var returnedNotification = om.readValue(
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+        var returnedNotificationDTO = om.readValue(
             restNotificationMockMvc
                 .perform(
-                    post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notification))
+                    post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO))
                 )
                 .andExpect(status().isCreated())
                 .andReturn()
                 .getResponse()
                 .getContentAsString(),
-            Notification.class
+            NotificationDTO.class
         );
 
         // Validate the Notification in the database
         assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedNotification = notificationMapper.toEntity(returnedNotificationDTO);
         assertNotificationUpdatableFieldsEquals(returnedNotification, getPersistedNotification(returnedNotification));
 
         insertedNotification = returnedNotification;
@@ -139,12 +146,15 @@ class NotificationResourceIT {
     void createNotificationWithExistingId() throws Exception {
         // Create the Notification with an existing ID
         notification.setId(1L);
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restNotificationMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notification)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Notification in the database
@@ -159,9 +169,12 @@ class NotificationResourceIT {
         notification.setMessage(null);
 
         // Create the Notification, which fails.
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notification)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO))
+            )
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -175,9 +188,12 @@ class NotificationResourceIT {
         notification.setType(null);
 
         // Create the Notification, which fails.
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notification)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO))
+            )
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -191,9 +207,12 @@ class NotificationResourceIT {
         notification.setSentDate(null);
 
         // Create the Notification, which fails.
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
 
         restNotificationMockMvc
-            .perform(post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notification)))
+            .perform(
+                post(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO))
+            )
             .andExpect(status().isBadRequest());
 
         assertSameRepositoryCount(databaseSizeBeforeTest);
@@ -255,13 +274,14 @@ class NotificationResourceIT {
         // Disconnect from session so that the updates on updatedNotification are not directly saved in db
         em.detach(updatedNotification);
         updatedNotification.message(UPDATED_MESSAGE).type(UPDATED_TYPE).sentDate(UPDATED_SENT_DATE).read(UPDATED_READ);
+        NotificationDTO notificationDTO = notificationMapper.toDto(updatedNotification);
 
         restNotificationMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, updatedNotification.getId())
+                put(ENTITY_API_URL_ID, notificationDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(updatedNotification))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isOk());
 
@@ -276,13 +296,16 @@ class NotificationResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
+        // Create the Notification
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNotificationMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, notification.getId())
+                put(ENTITY_API_URL_ID, notificationDTO.getId())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(notification))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -296,13 +319,16 @@ class NotificationResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
+        // Create the Notification
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(om.writeValueAsBytes(notification))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -316,9 +342,14 @@ class NotificationResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
+        // Create the Notification
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationMockMvc
-            .perform(put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notification)))
+            .perform(
+                put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(notificationDTO))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Notification in the database
@@ -337,7 +368,7 @@ class NotificationResourceIT {
         Notification partialUpdatedNotification = new Notification();
         partialUpdatedNotification.setId(notification.getId());
 
-        partialUpdatedNotification.read(UPDATED_READ);
+        partialUpdatedNotification.sentDate(UPDATED_SENT_DATE).read(UPDATED_READ);
 
         restNotificationMockMvc
             .perform(
@@ -392,13 +423,16 @@ class NotificationResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
+        // Create the Notification
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNotificationMockMvc
             .perform(
-                patch(ENTITY_API_URL_ID, notification.getId())
+                patch(ENTITY_API_URL_ID, notificationDTO.getId())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(notification))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -412,13 +446,16 @@ class NotificationResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
+        // Create the Notification
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .with(csrf())
                     .contentType("application/merge-patch+json")
-                    .content(om.writeValueAsBytes(notification))
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isBadRequest());
 
@@ -432,10 +469,16 @@ class NotificationResourceIT {
         long databaseSizeBeforeUpdate = getRepositoryCount();
         notification.setId(longCount.incrementAndGet());
 
+        // Create the Notification
+        NotificationDTO notificationDTO = notificationMapper.toDto(notification);
+
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restNotificationMockMvc
             .perform(
-                patch(ENTITY_API_URL).with(csrf()).contentType("application/merge-patch+json").content(om.writeValueAsBytes(notification))
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(om.writeValueAsBytes(notificationDTO))
             )
             .andExpect(status().isMethodNotAllowed());
 

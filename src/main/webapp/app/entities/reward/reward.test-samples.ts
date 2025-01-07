@@ -1,24 +1,24 @@
 import { IReward, NewReward } from './reward.model';
 
 export const sampleWithRequiredData: IReward = {
-  id: 6132,
-  name: 'tchou tchouu ouille au-dedans de',
+  id: 80,
+  name: 'de façon à ce que loin',
 };
 
 export const sampleWithPartialData: IReward = {
-  id: 11585,
-  name: 'applaudir snif égarer',
-  description: 'où lâche oh',
+  id: 16920,
+  name: 'solitaire plaire',
+  description: 'athlète glouglou',
 };
 
 export const sampleWithFullData: IReward = {
-  id: 5962,
-  name: 'mélancolique',
-  description: 'dring',
+  id: 21180,
+  name: 'biathlète du fait que divinement',
+  description: 'selon membre de l’équipe',
 };
 
 export const sampleWithNewData: NewReward = {
-  name: 'quasi porte-parole',
+  name: 'prévenir réfléchir',
   id: null,
 };
 

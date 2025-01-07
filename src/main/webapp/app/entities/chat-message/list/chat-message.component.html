@@ -1,0 +1,137 @@
+<div>
+  <h2 id="page-heading" data-cy="ChatMessageHeading">
+    <span jhiTranslate="starMindApp.chatMessage.home.title">ChatMessages</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="starMindApp.chatMessage.home.refreshListLabel">Actualiser la liste</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-chat-message"
+        [routerLink]="['/chat-message/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="starMindApp.chatMessage.home.createLabel">Créer un nouveau Chat Message</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  @if (chatMessages?.length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="starMindApp.chatMessage.home.notFound">Aucun Chat Message trouvé</span>
+    </div>
+  }
+
+  @if (chatMessages && chatMessages.length > 0) {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [sortState]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="message">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.chatMessage.message">Message</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.chatMessage.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="likeCount">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.chatMessage.likeCount">Like Count</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="author.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.chatMessage.author">Author</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="globalChat.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.chatMessage.globalChat">Global Chat</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="ideaChat.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.chatMessage.ideaChat">Idea Chat</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
+          @for (chatMessage of chatMessages; track trackId(chatMessage)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/chat-message', chatMessage.id, 'view']">{{ chatMessage.id }}</a>
+              </td>
+              <td>{{ chatMessage.message }}</td>
+              <td>{{ chatMessage.createdDate | formatMediumDatetime }}</td>
+              <td>{{ chatMessage.likeCount }}</td>
+              <td>
+                {{ chatMessage.author?.id }}
+              </td>
+              <td>
+                @if (chatMessage.globalChat) {
+                  <div>
+                    <a [routerLink]="['/global-chat', chatMessage.globalChat.id, 'view']">{{ chatMessage.globalChat.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (chatMessage.ideaChat) {
+                  <div>
+                    <a [routerLink]="['/idea-chat', chatMessage.ideaChat.id, 'view']">{{ chatMessage.ideaChat.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/chat-message', chatMessage.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Voir</span>
+                  </a>
+
+                  <a [routerLink]="['/chat-message', chatMessage.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editer</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(chatMessage)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Supprimer</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

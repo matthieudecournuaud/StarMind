@@ -34,27 +34,16 @@ public class Category implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @NotNull
-    @Column(name = "level", nullable = false)
+    @Column(name = "level")
     private String level;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "comments", "author", "ideaCategory", "assignedReward", "category", "reward" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "comments", "votes", "likeHistories", "author", "assignedReward", "manager", "category" },
+        allowSetters = true
+    )
     private Set<Idea> ideas = new HashSet<>();
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "superCategory")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "ideas", "subcategories", "parentCategory", "superCategory" }, allowSetters = true)
-    private Set<Category> subcategories = new HashSet<>();
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "ideas", "subcategories", "parentCategory", "superCategory" }, allowSetters = true)
-    private Category parentCategory;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "ideas", "subcategories", "parentCategory", "superCategory" }, allowSetters = true)
-    private Category superCategory;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -138,63 +127,6 @@ public class Category implements Serializable {
     public Category removeIdeas(Idea idea) {
         this.ideas.remove(idea);
         idea.setCategory(null);
-        return this;
-    }
-
-    public Set<Category> getSubcategories() {
-        return this.subcategories;
-    }
-
-    public void setSubcategories(Set<Category> categories) {
-        if (this.subcategories != null) {
-            this.subcategories.forEach(i -> i.setSuperCategory(null));
-        }
-        if (categories != null) {
-            categories.forEach(i -> i.setSuperCategory(this));
-        }
-        this.subcategories = categories;
-    }
-
-    public Category subcategories(Set<Category> categories) {
-        this.setSubcategories(categories);
-        return this;
-    }
-
-    public Category addSubcategories(Category category) {
-        this.subcategories.add(category);
-        category.setSuperCategory(this);
-        return this;
-    }
-
-    public Category removeSubcategories(Category category) {
-        this.subcategories.remove(category);
-        category.setSuperCategory(null);
-        return this;
-    }
-
-    public Category getParentCategory() {
-        return this.parentCategory;
-    }
-
-    public void setParentCategory(Category category) {
-        this.parentCategory = category;
-    }
-
-    public Category parentCategory(Category category) {
-        this.setParentCategory(category);
-        return this;
-    }
-
-    public Category getSuperCategory() {
-        return this.superCategory;
-    }
-
-    public void setSuperCategory(Category category) {
-        this.superCategory = category;
-    }
-
-    public Category superCategory(Category category) {
-        this.setSuperCategory(category);
         return this;
     }
 

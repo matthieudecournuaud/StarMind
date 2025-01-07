@@ -1,0 +1,43 @@
+{
+  "annotations": {
+    "changelogDate": "20241209143953"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "voteOption",
+      "fieldType": "VoteOption",
+      "fieldValidateRules": ["required"],
+      "fieldValues": "POUR,CONTRE,NEUTRE"
+    },
+    {
+      "fieldName": "comment",
+      "fieldType": "TextBlob"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "name": "Vote",
+  "relationships": [
+    {
+      "otherEntityName": "user",
+      "relationshipName": "voter",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "idea",
+      "otherEntityRelationshipName": "votes",
+      "relationshipName": "idea",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

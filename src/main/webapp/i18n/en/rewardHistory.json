@@ -21,8 +21,8 @@
       "action": "Action",
       "actionDate": "Action Date",
       "description": "Description",
-      "reward": "Reward",
-      "idea": "Idea"
+      "idea": "Idea",
+      "reward": "Reward"
     }
   }
 }

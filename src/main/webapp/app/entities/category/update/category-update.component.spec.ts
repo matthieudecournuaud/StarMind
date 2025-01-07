@@ -43,42 +43,12 @@ describe('Category Management Update Component', () => {
   });
 
   describe('ngOnInit', () => {
-    it('Should call Category query and add missing value', () => {
-      const category: ICategory = { id: 456 };
-      const parentCategory: ICategory = { id: 11771 };
-      category.parentCategory = parentCategory;
-      const superCategory: ICategory = { id: 29407 };
-      category.superCategory = superCategory;
-
-      const categoryCollection: ICategory[] = [{ id: 12714 }];
-      jest.spyOn(categoryService, 'query').mockReturnValue(of(new HttpResponse({ body: categoryCollection })));
-      const additionalCategories = [parentCategory, superCategory];
-      const expectedCollection: ICategory[] = [...additionalCategories, ...categoryCollection];
-      jest.spyOn(categoryService, 'addCategoryToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ category });
-      comp.ngOnInit();
-
-      expect(categoryService.query).toHaveBeenCalled();
-      expect(categoryService.addCategoryToCollectionIfMissing).toHaveBeenCalledWith(
-        categoryCollection,
-        ...additionalCategories.map(expect.objectContaining),
-      );
-      expect(comp.categoriesSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should update editForm', () => {
       const category: ICategory = { id: 456 };
-      const parentCategory: ICategory = { id: 32529 };
-      category.parentCategory = parentCategory;
-      const superCategory: ICategory = { id: 15338 };
-      category.superCategory = superCategory;
 
       activatedRoute.data = of({ category });
       comp.ngOnInit();
 
-      expect(comp.categoriesSharedCollection).toContain(parentCategory);
-      expect(comp.categoriesSharedCollection).toContain(superCategory);
       expect(comp.category).toEqual(category);
     });
   });
@@ -148,18 +118,6 @@ describe('Category Management Update Component', () => {
       expect(categoryService.update).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Compare relationships', () => {
-    describe('compareCategory', () => {
-      it('Should forward to categoryService', () => {
-        const entity = { id: 123 };
-        const entity2 = { id: 456 };
-        jest.spyOn(categoryService, 'compareCategory');
-        comp.compareCategory(entity, entity2);
-        expect(categoryService.compareCategory).toHaveBeenCalledWith(entity, entity2);
-      });
     });
   });
 });

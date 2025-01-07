@@ -91,7 +91,7 @@ describe('LikeHistory Management Component', () => {
     it('Should forward to likeHistoryService', () => {
       const entity = { id: 123 };
       jest.spyOn(service, 'getLikeHistoryIdentifier');
-      const id = comp.trackId(0, entity);
+      const id = comp.trackId(entity);
       expect(service.getLikeHistoryIdentifier).toHaveBeenCalledWith(entity);
       expect(id).toBe(entity.id);
     });

@@ -28,23 +28,25 @@ type IdeaFormRawValue = FormValueOf<IIdea>;
 
 type NewIdeaFormRawValue = FormValueOf<NewIdea>;
 
-type IdeaFormDefaults = Pick<NewIdea, 'id' | 'validation' | 'createdDate' | 'modifiedDate'>;
+type IdeaFormDefaults = Pick<NewIdea, 'id' | 'isConfidential' | 'validation' | 'createdDate' | 'modifiedDate' | 'isPublic'>;
 
 type IdeaFormGroupContent = {
   id: FormControl<IdeaFormRawValue['id'] | NewIdea['id']>;
   title: FormControl<IdeaFormRawValue['title']>;
   description: FormControl<IdeaFormRawValue['description']>;
   status: FormControl<IdeaFormRawValue['status']>;
+  isConfidential: FormControl<IdeaFormRawValue['isConfidential']>;
   validation: FormControl<IdeaFormRawValue['validation']>;
   rewardType: FormControl<IdeaFormRawValue['rewardType']>;
   likes: FormControl<IdeaFormRawValue['likes']>;
   createdDate: FormControl<IdeaFormRawValue['createdDate']>;
   modifiedDate: FormControl<IdeaFormRawValue['modifiedDate']>;
+  isPublic: FormControl<IdeaFormRawValue['isPublic']>;
+  impact: FormControl<IdeaFormRawValue['impact']>;
   author: FormControl<IdeaFormRawValue['author']>;
-  ideaCategory: FormControl<IdeaFormRawValue['ideaCategory']>;
   assignedReward: FormControl<IdeaFormRawValue['assignedReward']>;
+  manager: FormControl<IdeaFormRawValue['manager']>;
   category: FormControl<IdeaFormRawValue['category']>;
-  reward: FormControl<IdeaFormRawValue['reward']>;
 };
 
 export type IdeaFormGroup = FormGroup<IdeaFormGroupContent>;
@@ -73,16 +75,20 @@ export class IdeaFormService {
       status: new FormControl(ideaRawValue.status, {
         validators: [Validators.required],
       }),
+      isConfidential: new FormControl(ideaRawValue.isConfidential, {
+        validators: [Validators.required],
+      }),
       validation: new FormControl(ideaRawValue.validation),
       rewardType: new FormControl(ideaRawValue.rewardType),
       likes: new FormControl(ideaRawValue.likes),
       createdDate: new FormControl(ideaRawValue.createdDate),
       modifiedDate: new FormControl(ideaRawValue.modifiedDate),
+      isPublic: new FormControl(ideaRawValue.isPublic),
+      impact: new FormControl(ideaRawValue.impact),
       author: new FormControl(ideaRawValue.author),
-      ideaCategory: new FormControl(ideaRawValue.ideaCategory),
       assignedReward: new FormControl(ideaRawValue.assignedReward),
+      manager: new FormControl(ideaRawValue.manager),
       category: new FormControl(ideaRawValue.category),
-      reward: new FormControl(ideaRawValue.reward),
     });
   }
 
@@ -105,9 +111,11 @@ export class IdeaFormService {
 
     return {
       id: null,
+      isConfidential: false,
       validation: false,
       createdDate: currentTime,
       modifiedDate: currentTime,
+      isPublic: false,
     };
   }
 

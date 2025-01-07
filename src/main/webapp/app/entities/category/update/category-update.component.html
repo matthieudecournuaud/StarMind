@@ -39,51 +39,9 @@
           ></textarea>
         </div>
 
-        @let levelRef = editForm.get('level')!;
         <div class="mb-3">
           <label class="form-label" for="field_level" jhiTranslate="starMindApp.category.level">Level</label>
           <input type="text" class="form-control" name="level" id="field_level" data-cy="level" formControlName="level" />
-          @if (levelRef.invalid && (levelRef.dirty || levelRef.touched)) {
-            <div>
-              @if (editForm.get('level')?.errors?.required) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.required">Ce champ est obligatoire.</small>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_parentCategory" jhiTranslate="starMindApp.category.parentCategory">Parent Category</label>
-          <select
-            class="form-control"
-            id="field_parentCategory"
-            data-cy="parentCategory"
-            name="parentCategory"
-            formControlName="parentCategory"
-            [compareWith]="compareCategory"
-          >
-            <option [ngValue]="null"></option>
-            @for (categoryOption of categoriesSharedCollection; track $index) {
-              <option [ngValue]="categoryOption">{{ categoryOption.id }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_superCategory" jhiTranslate="starMindApp.category.superCategory">Super Category</label>
-          <select
-            class="form-control"
-            id="field_superCategory"
-            data-cy="superCategory"
-            name="superCategory"
-            formControlName="superCategory"
-            [compareWith]="compareCategory"
-          >
-            <option [ngValue]="null"></option>
-            @for (categoryOption of categoriesSharedCollection; track $index) {
-              <option [ngValue]="categoryOption">{{ categoryOption.id }}</option>
-            }
-          </select>
         </div>
       </div>
 

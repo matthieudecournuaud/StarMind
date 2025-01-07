@@ -66,7 +66,6 @@ public class CommentAsserts {
     public static void assertCommentUpdatableRelationshipsEquals(Comment expected, Comment actual) {
         assertThat(expected)
             .as("Verify Comment relationships")
-            .satisfies(e -> assertThat(e.getRelatedIdea()).as("check relatedIdea").isEqualTo(actual.getRelatedIdea()))
             .satisfies(e -> assertThat(e.getIdea()).as("check idea").isEqualTo(actual.getIdea()));
     }
 }

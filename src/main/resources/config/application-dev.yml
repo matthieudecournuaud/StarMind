@@ -33,16 +33,15 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/StarMind
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
+    username: StarMind
+    password: StarMind
     hikari:
       poolName: Hikari
       auto-commit: false
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
+    enabled: true
+    change-log: classpath:config/liquibase/master.xml
     contexts: dev, faker
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard

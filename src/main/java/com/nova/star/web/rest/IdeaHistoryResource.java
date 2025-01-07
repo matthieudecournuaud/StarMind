@@ -1,7 +1,8 @@
 package com.nova.star.web.rest;
 
-import com.nova.star.domain.IdeaHistory;
 import com.nova.star.repository.IdeaHistoryRepository;
+import com.nova.star.service.IdeaHistoryService;
+import com.nova.star.service.dto.IdeaHistoryDTO;
 import com.nova.star.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -29,7 +29,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api/idea-histories")
-@Transactional
 public class IdeaHistoryResource {
 
     private static final Logger LOG = LoggerFactory.getLogger(IdeaHistoryResource.class);
@@ -39,51 +38,54 @@ public class IdeaHistoryResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final IdeaHistoryService ideaHistoryService;
+
     private final IdeaHistoryRepository ideaHistoryRepository;
 
-    public IdeaHistoryResource(IdeaHistoryRepository ideaHistoryRepository) {
+    public IdeaHistoryResource(IdeaHistoryService ideaHistoryService, IdeaHistoryRepository ideaHistoryRepository) {
+        this.ideaHistoryService = ideaHistoryService;
         this.ideaHistoryRepository = ideaHistoryRepository;
     }
 
     /**
      * {@code POST  /idea-histories} : Create a new ideaHistory.
      *
-     * @param ideaHistory the ideaHistory to create.
-     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new ideaHistory, or with status {@code 400 (Bad Request)} if the ideaHistory has already an ID.
+     * @param ideaHistoryDTO the ideaHistoryDTO to create.
+     * @return the {@link ResponseEntity} with status {@code 201 (Created)} and with body the new ideaHistoryDTO, or with status {@code 400 (Bad Request)} if the ideaHistory has already an ID.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<IdeaHistory> createIdeaHistory(@Valid @RequestBody IdeaHistory ideaHistory) throws URISyntaxException {
-        LOG.debug("REST request to save IdeaHistory : {}", ideaHistory);
-        if (ideaHistory.getId() != null) {
+    public ResponseEntity<IdeaHistoryDTO> createIdeaHistory(@Valid @RequestBody IdeaHistoryDTO ideaHistoryDTO) throws URISyntaxException {
+        LOG.debug("REST request to save IdeaHistory : {}", ideaHistoryDTO);
+        if (ideaHistoryDTO.getId() != null) {
             throw new BadRequestAlertException("A new ideaHistory cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ideaHistory = ideaHistoryRepository.save(ideaHistory);
-        return ResponseEntity.created(new URI("/api/idea-histories/" + ideaHistory.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, ideaHistory.getId().toString()))
-            .body(ideaHistory);
+        ideaHistoryDTO = ideaHistoryService.save(ideaHistoryDTO);
+        return ResponseEntity.created(new URI("/api/idea-histories/" + ideaHistoryDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, ideaHistoryDTO.getId().toString()))
+            .body(ideaHistoryDTO);
     }
 
     /**
      * {@code PUT  /idea-histories/:id} : Updates an existing ideaHistory.
      *
-     * @param id the id of the ideaHistory to save.
-     * @param ideaHistory the ideaHistory to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ideaHistory,
-     * or with status {@code 400 (Bad Request)} if the ideaHistory is not valid,
-     * or with status {@code 500 (Internal Server Error)} if the ideaHistory couldn't be updated.
+     * @param id the id of the ideaHistoryDTO to save.
+     * @param ideaHistoryDTO the ideaHistoryDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ideaHistoryDTO,
+     * or with status {@code 400 (Bad Request)} if the ideaHistoryDTO is not valid,
+     * or with status {@code 500 (Internal Server Error)} if the ideaHistoryDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<IdeaHistory> updateIdeaHistory(
+    public ResponseEntity<IdeaHistoryDTO> updateIdeaHistory(
         @PathVariable(value = "id", required = false) final Long id,
-        @Valid @RequestBody IdeaHistory ideaHistory
+        @Valid @RequestBody IdeaHistoryDTO ideaHistoryDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to update IdeaHistory : {}, {}", id, ideaHistory);
-        if (ideaHistory.getId() == null) {
+        LOG.debug("REST request to update IdeaHistory : {}, {}", id, ideaHistoryDTO);
+        if (ideaHistoryDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, ideaHistory.getId())) {
+        if (!Objects.equals(id, ideaHistoryDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -91,33 +93,33 @@ public class IdeaHistoryResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        ideaHistory = ideaHistoryRepository.save(ideaHistory);
+        ideaHistoryDTO = ideaHistoryService.update(ideaHistoryDTO);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ideaHistory.getId().toString()))
-            .body(ideaHistory);
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ideaHistoryDTO.getId().toString()))
+            .body(ideaHistoryDTO);
     }
 
     /**
      * {@code PATCH  /idea-histories/:id} : Partial updates given fields of an existing ideaHistory, field will ignore if it is null
      *
-     * @param id the id of the ideaHistory to save.
-     * @param ideaHistory the ideaHistory to update.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ideaHistory,
-     * or with status {@code 400 (Bad Request)} if the ideaHistory is not valid,
-     * or with status {@code 404 (Not Found)} if the ideaHistory is not found,
-     * or with status {@code 500 (Internal Server Error)} if the ideaHistory couldn't be updated.
+     * @param id the id of the ideaHistoryDTO to save.
+     * @param ideaHistoryDTO the ideaHistoryDTO to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated ideaHistoryDTO,
+     * or with status {@code 400 (Bad Request)} if the ideaHistoryDTO is not valid,
+     * or with status {@code 404 (Not Found)} if the ideaHistoryDTO is not found,
+     * or with status {@code 500 (Internal Server Error)} if the ideaHistoryDTO couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<IdeaHistory> partialUpdateIdeaHistory(
+    public ResponseEntity<IdeaHistoryDTO> partialUpdateIdeaHistory(
         @PathVariable(value = "id", required = false) final Long id,
-        @NotNull @RequestBody IdeaHistory ideaHistory
+        @NotNull @RequestBody IdeaHistoryDTO ideaHistoryDTO
     ) throws URISyntaxException {
-        LOG.debug("REST request to partial update IdeaHistory partially : {}, {}", id, ideaHistory);
-        if (ideaHistory.getId() == null) {
+        LOG.debug("REST request to partial update IdeaHistory partially : {}, {}", id, ideaHistoryDTO);
+        if (ideaHistoryDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        if (!Objects.equals(id, ideaHistory.getId())) {
+        if (!Objects.equals(id, ideaHistoryDTO.getId())) {
             throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
         }
 
@@ -125,32 +127,11 @@ public class IdeaHistoryResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<IdeaHistory> result = ideaHistoryRepository
-            .findById(ideaHistory.getId())
-            .map(existingIdeaHistory -> {
-                if (ideaHistory.getAction() != null) {
-                    existingIdeaHistory.setAction(ideaHistory.getAction());
-                }
-                if (ideaHistory.getActionDate() != null) {
-                    existingIdeaHistory.setActionDate(ideaHistory.getActionDate());
-                }
-                if (ideaHistory.getDescription() != null) {
-                    existingIdeaHistory.setDescription(ideaHistory.getDescription());
-                }
-                if (ideaHistory.getRewardType() != null) {
-                    existingIdeaHistory.setRewardType(ideaHistory.getRewardType());
-                }
-                if (ideaHistory.getLikes() != null) {
-                    existingIdeaHistory.setLikes(ideaHistory.getLikes());
-                }
-
-                return existingIdeaHistory;
-            })
-            .map(ideaHistoryRepository::save);
+        Optional<IdeaHistoryDTO> result = ideaHistoryService.partialUpdate(ideaHistoryDTO);
 
         return ResponseUtil.wrapOrNotFound(
             result,
-            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ideaHistory.getId().toString())
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, ideaHistoryDTO.getId().toString())
         );
     }
 
@@ -161,9 +142,9 @@ public class IdeaHistoryResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of ideaHistories in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<IdeaHistory>> getAllIdeaHistories(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<IdeaHistoryDTO>> getAllIdeaHistories(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
         LOG.debug("REST request to get a page of IdeaHistories");
-        Page<IdeaHistory> page = ideaHistoryRepository.findAll(pageable);
+        Page<IdeaHistoryDTO> page = ideaHistoryService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -171,26 +152,26 @@ public class IdeaHistoryResource {
     /**
      * {@code GET  /idea-histories/:id} : get the "id" ideaHistory.
      *
-     * @param id the id of the ideaHistory to retrieve.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ideaHistory, or with status {@code 404 (Not Found)}.
+     * @param id the id of the ideaHistoryDTO to retrieve.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the ideaHistoryDTO, or with status {@code 404 (Not Found)}.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<IdeaHistory> getIdeaHistory(@PathVariable("id") Long id) {
+    public ResponseEntity<IdeaHistoryDTO> getIdeaHistory(@PathVariable("id") Long id) {
         LOG.debug("REST request to get IdeaHistory : {}", id);
-        Optional<IdeaHistory> ideaHistory = ideaHistoryRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(ideaHistory);
+        Optional<IdeaHistoryDTO> ideaHistoryDTO = ideaHistoryService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(ideaHistoryDTO);
     }
 
     /**
      * {@code DELETE  /idea-histories/:id} : delete the "id" ideaHistory.
      *
-     * @param id the id of the ideaHistory to delete.
+     * @param id the id of the ideaHistoryDTO to delete.
      * @return the {@link ResponseEntity} with status {@code 204 (NO_CONTENT)}.
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteIdeaHistory(@PathVariable("id") Long id) {
         LOG.debug("REST request to delete IdeaHistory : {}", id);
-        ideaHistoryRepository.deleteById(id);
+        ideaHistoryService.delete(id);
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();

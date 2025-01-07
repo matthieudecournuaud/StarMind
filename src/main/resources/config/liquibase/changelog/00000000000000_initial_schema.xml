@@ -70,7 +70,7 @@
                                  referencedTableName="jhi_user"/>
 
         <loadData
-                  file="config/liquibase/data/authority.csv"
+                  file="../data/authority.csv"
                   separator=";"
                   tableName="jhi_authority"
                   usePreparedStatements="true">

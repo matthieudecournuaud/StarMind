@@ -87,7 +87,7 @@
           </tr>
         </thead>
         <tbody infinite-scroll (scrolled)="loadNextPage()" [infiniteScrollDisabled]="!hasMorePage()" [infiniteScrollDistance]="0">
-          @for (ideaHistory of ideaHistories; track trackId) {
+          @for (ideaHistory of ideaHistories; track trackId(ideaHistory)) {
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/idea-history', ideaHistory.id, 'view']">{{ ideaHistory.id }}</a>
@@ -105,7 +105,7 @@
                     PLATINE: 'PLATINE',
                     DIAMANT: 'DIAMANT',
                     TITANIUM: 'TITANIUM',
-                    STARMIND: 'STARMIND',
+                    ELYSIUM: 'ELYSIUM',
                   }[ideaHistory.rewardType ?? 'null']
                 }}
               </td>

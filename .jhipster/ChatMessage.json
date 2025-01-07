@@ -1,0 +1,36 @@
+{
+  "annotations": {
+    "changelogDate": "20241209143959"
+  },
+  "applications": "*",
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "message",
+      "fieldType": "TextBlob",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "ZonedDateTime",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "likeCount",
+      "fieldType": "Integer"
+    }
+  ],
+  "name": "ChatMessage",
+  "pagination": "infinite-scroll",
+  "relationships": [
+    {
+      "otherEntityName": "user",
+      "relationshipName": "author",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one",
+      "relationshipWithBuiltInEntity": true
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceClass"
+}

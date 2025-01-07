@@ -43,7 +43,7 @@
         <git-commit-id-maven-plugin.version>9.0.1</git-commit-id-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <jhipster-framework.version>8.7.0</jhipster-framework.version>
-        <jib-maven-plugin.architecture>arm64</jib-maven-plugin.architecture>
+        <jib-maven-plugin.architecture>amd64</jib-maven-plugin.architecture>
         <jib-maven-plugin.image>eclipse-temurin:17-jre-focal</jib-maven-plugin.image>
         <jib-maven-plugin.version>3.4.3</jib-maven-plugin.version>
         <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
@@ -71,7 +71,7 @@
         <profile.test/>
         <profile.tls/>
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
-        <!-- <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version> -->
+        <sonar-maven-plugin.version>4.0.0.4121</sonar-maven-plugin.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <springdoc-openapi-starter-webmvc-api.version>2.6.0</springdoc-openapi-starter-webmvc-api.version>
     </properties>
@@ -220,6 +220,11 @@
             <artifactId>micrometer-registry-prometheus-simpleclient</artifactId>
         </dependency>
         <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>jakarta.annotation</groupId>
             <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
@@ -244,6 +249,7 @@
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
+            <version>6.2.10.Final</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate.orm</groupId>
@@ -355,10 +361,10 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
             </plugin>
-            <!-- <plugin>
+            <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-            </plugin> -->
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
@@ -709,7 +715,7 @@
                             </goals>
                             <configuration>
                                 <files>
-                                    <!-- <file>sonar-project.properties</file> -->
+                                    <file>sonar-project.properties</file>
                                 </files>
                             </configuration>
                         </execution>
@@ -808,11 +814,11 @@
                         </dependency>
                     </dependencies>
                 </plugin>
-                <!-- <plugin>
+                <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
                     <artifactId>sonar-maven-plugin</artifactId>
                     <version>${sonar-maven-plugin.version}</version>
-                </plugin> -->
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -831,9 +837,9 @@
             </activation>
             <properties>
                 <!-- default Spring profiles -->
-                <liquibase-plugin.password>admin</liquibase-plugin.password>
+                <liquibase-plugin.password/>
                 <liquibase-plugin.url>jdbc:postgresql://localhost:5432/StarMind</liquibase-plugin.url>
-                <liquibase-plugin.username>admin</liquibase-plugin.username>
+                <liquibase-plugin.username>StarMind</liquibase-plugin.username>
                 <profile.test>testdev</profile.test>
                 <spring.profiles.active>dev${profile.tls}${profile.no-liquibase}</spring.profiles.active>
             </properties>
@@ -939,9 +945,9 @@
             <id>prod</id>
             <properties>
                 <!-- default Spring profiles -->
-                <liquibase-plugin.password>admin</liquibase-plugin.password>
+                <liquibase-plugin.password/>
                 <liquibase-plugin.url>jdbc:postgresql://localhost:5432/StarMind</liquibase-plugin.url>
-                <liquibase-plugin.username>admin</liquibase-plugin.username>
+                <liquibase-plugin.username>StarMind</liquibase-plugin.username>
                 <profile.test>testprod</profile.test>
                 <spring.profiles.active>prod${profile.api-docs}${profile.tls}${profile.e2e}${profile.no-liquibase}</spring.profiles.active>
             </properties>

@@ -51,6 +51,7 @@ public class IdeaAsserts {
             .satisfies(e -> assertThat(e.getTitle()).as("check title").isEqualTo(actual.getTitle()))
             .satisfies(e -> assertThat(e.getDescription()).as("check description").isEqualTo(actual.getDescription()))
             .satisfies(e -> assertThat(e.getStatus()).as("check status").isEqualTo(actual.getStatus()))
+            .satisfies(e -> assertThat(e.getIsConfidential()).as("check isConfidential").isEqualTo(actual.getIsConfidential()))
             .satisfies(e -> assertThat(e.getValidation()).as("check validation").isEqualTo(actual.getValidation()))
             .satisfies(e -> assertThat(e.getRewardType()).as("check rewardType").isEqualTo(actual.getRewardType()))
             .satisfies(e -> assertThat(e.getLikes()).as("check likes").isEqualTo(actual.getLikes()))
@@ -65,7 +66,9 @@ public class IdeaAsserts {
                     .as("check modifiedDate")
                     .usingComparator(zonedDataTimeSameInstant)
                     .isEqualTo(actual.getModifiedDate())
-            );
+            )
+            .satisfies(e -> assertThat(e.getIsPublic()).as("check isPublic").isEqualTo(actual.getIsPublic()))
+            .satisfies(e -> assertThat(e.getImpact()).as("check impact").isEqualTo(actual.getImpact()));
     }
 
     /**
@@ -77,9 +80,7 @@ public class IdeaAsserts {
     public static void assertIdeaUpdatableRelationshipsEquals(Idea expected, Idea actual) {
         assertThat(expected)
             .as("Verify Idea relationships")
-            .satisfies(e -> assertThat(e.getIdeaCategory()).as("check ideaCategory").isEqualTo(actual.getIdeaCategory()))
             .satisfies(e -> assertThat(e.getAssignedReward()).as("check assignedReward").isEqualTo(actual.getAssignedReward()))
-            .satisfies(e -> assertThat(e.getCategory()).as("check category").isEqualTo(actual.getCategory()))
-            .satisfies(e -> assertThat(e.getReward()).as("check reward").isEqualTo(actual.getReward()));
+            .satisfies(e -> assertThat(e.getCategory()).as("check category").isEqualTo(actual.getCategory()));
     }
 }

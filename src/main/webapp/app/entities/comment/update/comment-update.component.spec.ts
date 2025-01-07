@@ -4,10 +4,10 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, from, of } from 'rxjs';
 
-import { IIdea } from 'app/entities/idea/idea.model';
-import { IdeaService } from 'app/entities/idea/service/idea.service';
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/service/user.service';
+import { IIdea } from 'app/entities/idea/idea.model';
+import { IdeaService } from 'app/entities/idea/service/idea.service';
 import { IComment } from '../comment.model';
 import { CommentService } from '../service/comment.service';
 import { CommentFormService } from './comment-form.service';
@@ -20,8 +20,8 @@ describe('Comment Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let commentFormService: CommentFormService;
   let commentService: CommentService;
-  let ideaService: IdeaService;
   let userService: UserService;
+  let ideaService: IdeaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -44,43 +44,19 @@ describe('Comment Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     commentFormService = TestBed.inject(CommentFormService);
     commentService = TestBed.inject(CommentService);
-    ideaService = TestBed.inject(IdeaService);
     userService = TestBed.inject(UserService);
+    ideaService = TestBed.inject(IdeaService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call Idea query and add missing value', () => {
-      const comment: IComment = { id: 456 };
-      const relatedIdea: IIdea = { id: 6068 };
-      comment.relatedIdea = relatedIdea;
-      const idea: IIdea = { id: 9964 };
-      comment.idea = idea;
-
-      const ideaCollection: IIdea[] = [{ id: 20920 }];
-      jest.spyOn(ideaService, 'query').mockReturnValue(of(new HttpResponse({ body: ideaCollection })));
-      const additionalIdeas = [relatedIdea, idea];
-      const expectedCollection: IIdea[] = [...additionalIdeas, ...ideaCollection];
-      jest.spyOn(ideaService, 'addIdeaToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ comment });
-      comp.ngOnInit();
-
-      expect(ideaService.query).toHaveBeenCalled();
-      expect(ideaService.addIdeaToCollectionIfMissing).toHaveBeenCalledWith(
-        ideaCollection,
-        ...additionalIdeas.map(expect.objectContaining),
-      );
-      expect(comp.ideasSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should call User query and add missing value', () => {
       const comment: IComment = { id: 456 };
-      const author: IUser = { id: '4ef2d4f0-1f0a-4005-9bd4-b0a1e3b5e01c' };
+      const author: IUser = { id: '7cfe5c3b-dfd6-4aaf-a66d-1164363b7123' };
       comment.author = author;
 
-      const userCollection: IUser[] = [{ id: '90c81db7-060b-479a-9a91-dfa708e673b4' }];
+      const userCollection: IUser[] = [{ id: '001a766f-3b9a-48f1-a56e-4855df46dd2c' }];
       jest.spyOn(userService, 'query').mockReturnValue(of(new HttpResponse({ body: userCollection })));
       const additionalUsers = [author];
       const expectedCollection: IUser[] = [...additionalUsers, ...userCollection];
@@ -97,21 +73,40 @@ describe('Comment Management Update Component', () => {
       expect(comp.usersSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should update editForm', () => {
+    it('Should call Idea query and add missing value', () => {
       const comment: IComment = { id: 456 };
-      const relatedIdea: IIdea = { id: 7452 };
-      comment.relatedIdea = relatedIdea;
-      const idea: IIdea = { id: 15510 };
+      const idea: IIdea = { id: 18417 };
       comment.idea = idea;
-      const author: IUser = { id: 'eb13b678-0e62-49f7-b16c-f2c1124e713d' };
-      comment.author = author;
+
+      const ideaCollection: IIdea[] = [{ id: 6168 }];
+      jest.spyOn(ideaService, 'query').mockReturnValue(of(new HttpResponse({ body: ideaCollection })));
+      const additionalIdeas = [idea];
+      const expectedCollection: IIdea[] = [...additionalIdeas, ...ideaCollection];
+      jest.spyOn(ideaService, 'addIdeaToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ comment });
       comp.ngOnInit();
 
-      expect(comp.ideasSharedCollection).toContain(relatedIdea);
-      expect(comp.ideasSharedCollection).toContain(idea);
+      expect(ideaService.query).toHaveBeenCalled();
+      expect(ideaService.addIdeaToCollectionIfMissing).toHaveBeenCalledWith(
+        ideaCollection,
+        ...additionalIdeas.map(expect.objectContaining),
+      );
+      expect(comp.ideasSharedCollection).toEqual(expectedCollection);
+    });
+
+    it('Should update editForm', () => {
+      const comment: IComment = { id: 456 };
+      const author: IUser = { id: '7f55b65c-9842-4425-8dff-24553a4f82c4' };
+      comment.author = author;
+      const idea: IIdea = { id: 25074 };
+      comment.idea = idea;
+
+      activatedRoute.data = of({ comment });
+      comp.ngOnInit();
+
       expect(comp.usersSharedCollection).toContain(author);
+      expect(comp.ideasSharedCollection).toContain(idea);
       expect(comp.comment).toEqual(comment);
     });
   });
@@ -185,16 +180,6 @@ describe('Comment Management Update Component', () => {
   });
 
   describe('Compare relationships', () => {
-    describe('compareIdea', () => {
-      it('Should forward to ideaService', () => {
-        const entity = { id: 123 };
-        const entity2 = { id: 456 };
-        jest.spyOn(ideaService, 'compareIdea');
-        comp.compareIdea(entity, entity2);
-        expect(ideaService.compareIdea).toHaveBeenCalledWith(entity, entity2);
-      });
-    });
-
     describe('compareUser', () => {
       it('Should forward to userService', () => {
         const entity = { id: 'ABC' };
@@ -202,6 +187,16 @@ describe('Comment Management Update Component', () => {
         jest.spyOn(userService, 'compareUser');
         comp.compareUser(entity, entity2);
         expect(userService.compareUser).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareIdea', () => {
+      it('Should forward to ideaService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(ideaService, 'compareIdea');
+        comp.compareIdea(entity, entity2);
+        expect(ideaService.compareIdea).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

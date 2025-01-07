@@ -25,18 +25,6 @@ class RewardHistoryTest {
     }
 
     @Test
-    void rewardTest() {
-        RewardHistory rewardHistory = getRewardHistoryRandomSampleGenerator();
-        Reward rewardBack = getRewardRandomSampleGenerator();
-
-        rewardHistory.setReward(rewardBack);
-        assertThat(rewardHistory.getReward()).isEqualTo(rewardBack);
-
-        rewardHistory.reward(null);
-        assertThat(rewardHistory.getReward()).isNull();
-    }
-
-    @Test
     void ideaTest() {
         RewardHistory rewardHistory = getRewardHistoryRandomSampleGenerator();
         Idea ideaBack = getIdeaRandomSampleGenerator();
@@ -46,5 +34,17 @@ class RewardHistoryTest {
 
         rewardHistory.idea(null);
         assertThat(rewardHistory.getIdea()).isNull();
+    }
+
+    @Test
+    void rewardTest() {
+        RewardHistory rewardHistory = getRewardHistoryRandomSampleGenerator();
+        Reward rewardBack = getRewardRandomSampleGenerator();
+
+        rewardHistory.setReward(rewardBack);
+        assertThat(rewardHistory.getReward()).isEqualTo(rewardBack);
+
+        rewardHistory.reward(null);
+        assertThat(rewardHistory.getReward()).isNull();
     }
 }

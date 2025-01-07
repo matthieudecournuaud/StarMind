@@ -23,8 +23,8 @@ describe('RewardHistory Form Service', () => {
             action: expect.any(Object),
             actionDate: expect.any(Object),
             description: expect.any(Object),
-            reward: expect.any(Object),
             idea: expect.any(Object),
+            reward: expect.any(Object),
           }),
         );
       });
@@ -38,8 +38,8 @@ describe('RewardHistory Form Service', () => {
             action: expect.any(Object),
             actionDate: expect.any(Object),
             description: expect.any(Object),
-            reward: expect.any(Object),
             idea: expect.any(Object),
+            reward: expect.any(Object),
           }),
         );
       });

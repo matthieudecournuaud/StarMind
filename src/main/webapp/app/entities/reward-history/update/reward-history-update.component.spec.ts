@@ -4,10 +4,10 @@ import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, from, of } from 'rxjs';
 
-import { IReward } from 'app/entities/reward/reward.model';
-import { RewardService } from 'app/entities/reward/service/reward.service';
 import { IIdea } from 'app/entities/idea/idea.model';
 import { IdeaService } from 'app/entities/idea/service/idea.service';
+import { IReward } from 'app/entities/reward/reward.model';
+import { RewardService } from 'app/entities/reward/service/reward.service';
 import { IRewardHistory } from '../reward-history.model';
 import { RewardHistoryService } from '../service/reward-history.service';
 import { RewardHistoryFormService } from './reward-history-form.service';
@@ -20,8 +20,8 @@ describe('RewardHistory Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let rewardHistoryFormService: RewardHistoryFormService;
   let rewardHistoryService: RewardHistoryService;
-  let rewardService: RewardService;
   let ideaService: IdeaService;
+  let rewardService: RewardService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -44,41 +44,19 @@ describe('RewardHistory Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     rewardHistoryFormService = TestBed.inject(RewardHistoryFormService);
     rewardHistoryService = TestBed.inject(RewardHistoryService);
-    rewardService = TestBed.inject(RewardService);
     ideaService = TestBed.inject(IdeaService);
+    rewardService = TestBed.inject(RewardService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call Reward query and add missing value', () => {
-      const rewardHistory: IRewardHistory = { id: 456 };
-      const reward: IReward = { id: 13743 };
-      rewardHistory.reward = reward;
-
-      const rewardCollection: IReward[] = [{ id: 7676 }];
-      jest.spyOn(rewardService, 'query').mockReturnValue(of(new HttpResponse({ body: rewardCollection })));
-      const additionalRewards = [reward];
-      const expectedCollection: IReward[] = [...additionalRewards, ...rewardCollection];
-      jest.spyOn(rewardService, 'addRewardToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ rewardHistory });
-      comp.ngOnInit();
-
-      expect(rewardService.query).toHaveBeenCalled();
-      expect(rewardService.addRewardToCollectionIfMissing).toHaveBeenCalledWith(
-        rewardCollection,
-        ...additionalRewards.map(expect.objectContaining),
-      );
-      expect(comp.rewardsSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should call Idea query and add missing value', () => {
       const rewardHistory: IRewardHistory = { id: 456 };
-      const idea: IIdea = { id: 10446 };
+      const idea: IIdea = { id: 12746 };
       rewardHistory.idea = idea;
 
-      const ideaCollection: IIdea[] = [{ id: 29748 }];
+      const ideaCollection: IIdea[] = [{ id: 15433 }];
       jest.spyOn(ideaService, 'query').mockReturnValue(of(new HttpResponse({ body: ideaCollection })));
       const additionalIdeas = [idea];
       const expectedCollection: IIdea[] = [...additionalIdeas, ...ideaCollection];
@@ -95,18 +73,40 @@ describe('RewardHistory Management Update Component', () => {
       expect(comp.ideasSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should update editForm', () => {
+    it('Should call Reward query and add missing value', () => {
       const rewardHistory: IRewardHistory = { id: 456 };
-      const reward: IReward = { id: 17038 };
+      const reward: IReward = { id: 26729 };
       rewardHistory.reward = reward;
-      const idea: IIdea = { id: 18173 };
-      rewardHistory.idea = idea;
+
+      const rewardCollection: IReward[] = [{ id: 28112 }];
+      jest.spyOn(rewardService, 'query').mockReturnValue(of(new HttpResponse({ body: rewardCollection })));
+      const additionalRewards = [reward];
+      const expectedCollection: IReward[] = [...additionalRewards, ...rewardCollection];
+      jest.spyOn(rewardService, 'addRewardToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ rewardHistory });
       comp.ngOnInit();
 
-      expect(comp.rewardsSharedCollection).toContain(reward);
+      expect(rewardService.query).toHaveBeenCalled();
+      expect(rewardService.addRewardToCollectionIfMissing).toHaveBeenCalledWith(
+        rewardCollection,
+        ...additionalRewards.map(expect.objectContaining),
+      );
+      expect(comp.rewardsSharedCollection).toEqual(expectedCollection);
+    });
+
+    it('Should update editForm', () => {
+      const rewardHistory: IRewardHistory = { id: 456 };
+      const idea: IIdea = { id: 32428 };
+      rewardHistory.idea = idea;
+      const reward: IReward = { id: 21630 };
+      rewardHistory.reward = reward;
+
+      activatedRoute.data = of({ rewardHistory });
+      comp.ngOnInit();
+
       expect(comp.ideasSharedCollection).toContain(idea);
+      expect(comp.rewardsSharedCollection).toContain(reward);
       expect(comp.rewardHistory).toEqual(rewardHistory);
     });
   });
@@ -180,16 +180,6 @@ describe('RewardHistory Management Update Component', () => {
   });
 
   describe('Compare relationships', () => {
-    describe('compareReward', () => {
-      it('Should forward to rewardService', () => {
-        const entity = { id: 123 };
-        const entity2 = { id: 456 };
-        jest.spyOn(rewardService, 'compareReward');
-        comp.compareReward(entity, entity2);
-        expect(rewardService.compareReward).toHaveBeenCalledWith(entity, entity2);
-      });
-    });
-
     describe('compareIdea', () => {
       it('Should forward to ideaService', () => {
         const entity = { id: 123 };
@@ -197,6 +187,16 @@ describe('RewardHistory Management Update Component', () => {
         jest.spyOn(ideaService, 'compareIdea');
         comp.compareIdea(entity, entity2);
         expect(ideaService.compareIdea).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareReward', () => {
+      it('Should forward to rewardService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(rewardService, 'compareReward');
+        comp.compareReward(entity, entity2);
+        expect(rewardService.compareReward).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

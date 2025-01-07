@@ -1,0 +1,126 @@
+<div>
+  <h2 id="page-heading" data-cy="VoteHeading">
+    <span jhiTranslate="starMindApp.vote.home.title">Votes</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [animation]="isLoading ? 'spin' : undefined"></fa-icon>
+        <span jhiTranslate="starMindApp.vote.home.refreshListLabel">Actualiser la liste</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-vote"
+        [routerLink]="['/vote/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="starMindApp.vote.home.createLabel">Créer un nouveau Vote</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  @if (votes?.length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="starMindApp.vote.home.notFound">Aucun Vote trouvé</span>
+    </div>
+  }
+
+  @if (votes && votes.length > 0) {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [sortState]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="voteOption">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.vote.voteOption">Vote Option</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="comment">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.vote.comment">Comment</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.vote.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="voter.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.vote.voter">Voter</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="idea.id">
+              <div class="d-flex">
+                <span jhiTranslate="starMindApp.vote.idea">Idea</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (vote of votes; track trackId(vote)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/vote', vote.id, 'view']">{{ vote.id }}</a>
+              </td>
+              <td [jhiTranslate]="'starMindApp.VoteOption.' + (vote.voteOption ?? 'null')">
+                {{ { null: '', POUR: 'POUR', CONTRE: 'CONTRE', NEUTRE: 'NEUTRE' }[vote.voteOption ?? 'null'] }}
+              </td>
+              <td>{{ vote.comment }}</td>
+              <td>{{ vote.createdDate | formatMediumDatetime }}</td>
+              <td>
+                {{ vote.voter?.id }}
+              </td>
+              <td>
+                @if (vote.idea) {
+                  <div>
+                    <a [routerLink]="['/idea', vote.idea.id, 'view']">{{ vote.idea.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/vote', vote.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Voir</span>
+                  </a>
+
+                  <a [routerLink]="['/vote', vote.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editer</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(vote)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times"></fa-icon>
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Supprimer</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

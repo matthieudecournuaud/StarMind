@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity ChatMessage.
+    -->
+    <changeSet id="20241209143959-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="author_id"
+                                 baseTableName="chat_message"
+                                 constraintName="fk_chat_message__author_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="global_chat_id"
+                                 baseTableName="chat_message"
+                                 constraintName="fk_chat_message__global_chat_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="global_chat"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="idea_chat_id"
+                                 baseTableName="chat_message"
+                                 constraintName="fk_chat_message__idea_chat_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="idea_chat"
+                                 />
+    </changeSet>
+</databaseChangeLog>

@@ -6,10 +6,10 @@ import { Subject, from, of } from 'rxjs';
 
 import { IUser } from 'app/entities/user/user.model';
 import { UserService } from 'app/entities/user/service/user.service';
-import { ICategory } from 'app/entities/category/category.model';
-import { CategoryService } from 'app/entities/category/service/category.service';
 import { IReward } from 'app/entities/reward/reward.model';
 import { RewardService } from 'app/entities/reward/service/reward.service';
+import { ICategory } from 'app/entities/category/category.model';
+import { CategoryService } from 'app/entities/category/service/category.service';
 import { IIdea } from '../idea.model';
 import { IdeaService } from '../service/idea.service';
 import { IdeaFormService } from './idea-form.service';
@@ -23,8 +23,8 @@ describe('Idea Management Update Component', () => {
   let ideaFormService: IdeaFormService;
   let ideaService: IdeaService;
   let userService: UserService;
-  let categoryService: CategoryService;
   let rewardService: RewardService;
+  let categoryService: CategoryService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -48,8 +48,8 @@ describe('Idea Management Update Component', () => {
     ideaFormService = TestBed.inject(IdeaFormService);
     ideaService = TestBed.inject(IdeaService);
     userService = TestBed.inject(UserService);
-    categoryService = TestBed.inject(CategoryService);
     rewardService = TestBed.inject(RewardService);
+    categoryService = TestBed.inject(CategoryService);
 
     comp = fixture.componentInstance;
   });
@@ -57,12 +57,14 @@ describe('Idea Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call User query and add missing value', () => {
       const idea: IIdea = { id: 456 };
-      const author: IUser = { id: 'a7f8882c-3f3b-43ce-bf08-b044e7939f90' };
+      const author: IUser = { id: 'f7367e7f-57e6-4ee4-a980-2f50b456a553' };
       idea.author = author;
+      const manager: IUser = { id: 'f1eae3a5-dd03-4ca9-aa6c-b0ccae783557' };
+      idea.manager = manager;
 
-      const userCollection: IUser[] = [{ id: '0555c1d8-523c-4341-a1b1-b652e213371b' }];
+      const userCollection: IUser[] = [{ id: 'db76f8e6-392a-434b-8adc-3fec94c32fb1' }];
       jest.spyOn(userService, 'query').mockReturnValue(of(new HttpResponse({ body: userCollection })));
-      const additionalUsers = [author];
+      const additionalUsers = [author, manager];
       const expectedCollection: IUser[] = [...additionalUsers, ...userCollection];
       jest.spyOn(userService, 'addUserToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -77,40 +79,14 @@ describe('Idea Management Update Component', () => {
       expect(comp.usersSharedCollection).toEqual(expectedCollection);
     });
 
-    it('Should call Category query and add missing value', () => {
-      const idea: IIdea = { id: 456 };
-      const ideaCategory: ICategory = { id: 29988 };
-      idea.ideaCategory = ideaCategory;
-      const category: ICategory = { id: 20958 };
-      idea.category = category;
-
-      const categoryCollection: ICategory[] = [{ id: 11100 }];
-      jest.spyOn(categoryService, 'query').mockReturnValue(of(new HttpResponse({ body: categoryCollection })));
-      const additionalCategories = [ideaCategory, category];
-      const expectedCollection: ICategory[] = [...additionalCategories, ...categoryCollection];
-      jest.spyOn(categoryService, 'addCategoryToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ idea });
-      comp.ngOnInit();
-
-      expect(categoryService.query).toHaveBeenCalled();
-      expect(categoryService.addCategoryToCollectionIfMissing).toHaveBeenCalledWith(
-        categoryCollection,
-        ...additionalCategories.map(expect.objectContaining),
-      );
-      expect(comp.categoriesSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should call Reward query and add missing value', () => {
       const idea: IIdea = { id: 456 };
-      const assignedReward: IReward = { id: 21274 };
+      const assignedReward: IReward = { id: 23454 };
       idea.assignedReward = assignedReward;
-      const reward: IReward = { id: 3241 };
-      idea.reward = reward;
 
-      const rewardCollection: IReward[] = [{ id: 15109 }];
+      const rewardCollection: IReward[] = [{ id: 29997 }];
       jest.spyOn(rewardService, 'query').mockReturnValue(of(new HttpResponse({ body: rewardCollection })));
-      const additionalRewards = [assignedReward, reward];
+      const additionalRewards = [assignedReward];
       const expectedCollection: IReward[] = [...additionalRewards, ...rewardCollection];
       jest.spyOn(rewardService, 'addRewardToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -125,27 +101,46 @@ describe('Idea Management Update Component', () => {
       expect(comp.rewardsSharedCollection).toEqual(expectedCollection);
     });
 
+    it('Should call Category query and add missing value', () => {
+      const idea: IIdea = { id: 456 };
+      const category: ICategory = { id: 15959 };
+      idea.category = category;
+
+      const categoryCollection: ICategory[] = [{ id: 2012 }];
+      jest.spyOn(categoryService, 'query').mockReturnValue(of(new HttpResponse({ body: categoryCollection })));
+      const additionalCategories = [category];
+      const expectedCollection: ICategory[] = [...additionalCategories, ...categoryCollection];
+      jest.spyOn(categoryService, 'addCategoryToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ idea });
+      comp.ngOnInit();
+
+      expect(categoryService.query).toHaveBeenCalled();
+      expect(categoryService.addCategoryToCollectionIfMissing).toHaveBeenCalledWith(
+        categoryCollection,
+        ...additionalCategories.map(expect.objectContaining),
+      );
+      expect(comp.categoriesSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const idea: IIdea = { id: 456 };
-      const author: IUser = { id: 'f50be526-8e59-4b37-86ed-80f4c30b1509' };
+      const author: IUser = { id: '25f36335-b329-44da-b38b-a785adf7434c' };
       idea.author = author;
-      const ideaCategory: ICategory = { id: 23374 };
-      idea.ideaCategory = ideaCategory;
-      const category: ICategory = { id: 16414 };
-      idea.category = category;
-      const assignedReward: IReward = { id: 1486 };
+      const manager: IUser = { id: '9cec1f6d-cab0-47b8-9182-217a47263195' };
+      idea.manager = manager;
+      const assignedReward: IReward = { id: 19815 };
       idea.assignedReward = assignedReward;
-      const reward: IReward = { id: 19379 };
-      idea.reward = reward;
+      const category: ICategory = { id: 15314 };
+      idea.category = category;
 
       activatedRoute.data = of({ idea });
       comp.ngOnInit();
 
       expect(comp.usersSharedCollection).toContain(author);
-      expect(comp.categoriesSharedCollection).toContain(ideaCategory);
-      expect(comp.categoriesSharedCollection).toContain(category);
+      expect(comp.usersSharedCollection).toContain(manager);
       expect(comp.rewardsSharedCollection).toContain(assignedReward);
-      expect(comp.rewardsSharedCollection).toContain(reward);
+      expect(comp.categoriesSharedCollection).toContain(category);
       expect(comp.idea).toEqual(idea);
     });
   });
@@ -229,16 +224,6 @@ describe('Idea Management Update Component', () => {
       });
     });
 
-    describe('compareCategory', () => {
-      it('Should forward to categoryService', () => {
-        const entity = { id: 123 };
-        const entity2 = { id: 456 };
-        jest.spyOn(categoryService, 'compareCategory');
-        comp.compareCategory(entity, entity2);
-        expect(categoryService.compareCategory).toHaveBeenCalledWith(entity, entity2);
-      });
-    });
-
     describe('compareReward', () => {
       it('Should forward to rewardService', () => {
         const entity = { id: 123 };
@@ -246,6 +231,16 @@ describe('Idea Management Update Component', () => {
         jest.spyOn(rewardService, 'compareReward');
         comp.compareReward(entity, entity2);
         expect(rewardService.compareReward).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareCategory', () => {
+      it('Should forward to categoryService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(categoryService, 'compareCategory');
+        comp.compareCategory(entity, entity2);
+        expect(categoryService.compareCategory).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

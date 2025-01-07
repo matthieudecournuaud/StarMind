@@ -1,0 +1,10 @@
+{
+  "starMindApp": {
+    "VoteOption": {
+      "null": "",
+      "POUR": "POUR",
+      "CONTRE": "CONTRE",
+      "NEUTRE": "NEUTRE"
+    }
+  }
+}

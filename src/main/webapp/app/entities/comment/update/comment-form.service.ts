@@ -33,7 +33,6 @@ type CommentFormGroupContent = {
   id: FormControl<CommentFormRawValue['id'] | NewComment['id']>;
   content: FormControl<CommentFormRawValue['content']>;
   createdDate: FormControl<CommentFormRawValue['createdDate']>;
-  relatedIdea: FormControl<CommentFormRawValue['relatedIdea']>;
   author: FormControl<CommentFormRawValue['author']>;
   idea: FormControl<CommentFormRawValue['idea']>;
 };
@@ -59,7 +58,6 @@ export class CommentFormService {
         validators: [Validators.required],
       }),
       createdDate: new FormControl(commentRawValue.createdDate),
-      relatedIdea: new FormControl(commentRawValue.relatedIdea),
       author: new FormControl(commentRawValue.author),
       idea: new FormControl(commentRawValue.idea),
     });

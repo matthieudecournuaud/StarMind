@@ -44,23 +44,6 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_relatedIdea" jhiTranslate="starMindApp.comment.relatedIdea">Related Idea</label>
-          <select
-            class="form-control"
-            id="field_relatedIdea"
-            data-cy="relatedIdea"
-            name="relatedIdea"
-            formControlName="relatedIdea"
-            [compareWith]="compareIdea"
-          >
-            <option [ngValue]="null"></option>
-            @for (ideaOption of ideasSharedCollection; track $index) {
-              <option [ngValue]="ideaOption">{{ ideaOption.id }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="mb-3">
           <label class="form-label" for="field_author" jhiTranslate="starMindApp.comment.author">Author</label>
           <select
             class="form-control"

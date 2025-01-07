@@ -4,7 +4,12 @@
       "null": "",
       "OPEN": "OPEN",
       "IN_PROGRESS": "IN_PROGRESS",
-      "COMPLETED": "COMPLETED"
+      "COMPLETED": "COMPLETED",
+      "APPROVED": "APPROVED",
+      "REJECTED": "REJECTED",
+      "PUBLISHED": "PUBLISHED",
+      "IN_VOTING": "IN_VOTING",
+      "MANAGER_REVIEW": "MANAGER_REVIEW"
     }
   }
 }

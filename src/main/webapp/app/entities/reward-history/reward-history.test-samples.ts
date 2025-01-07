@@ -3,27 +3,28 @@ import dayjs from 'dayjs/esm';
 import { IRewardHistory, NewRewardHistory } from './reward-history.model';
 
 export const sampleWithRequiredData: IRewardHistory = {
-  id: 30972,
-  action: 'redire parce que',
-  actionDate: dayjs('2024-08-30T02:23'),
+  id: 10169,
+  action: 'rectorat',
+  actionDate: dayjs('2024-12-09T10:29'),
 };
 
 export const sampleWithPartialData: IRewardHistory = {
-  id: 32576,
-  action: 'à peu près corps enseignant',
-  actionDate: dayjs('2024-08-30T10:40'),
+  id: 24655,
+  action: 'hôte après',
+  actionDate: dayjs('2024-12-09T11:25'),
+  description: '../fake-data/blob/hipster.txt',
 };
 
 export const sampleWithFullData: IRewardHistory = {
-  id: 3742,
-  action: 'euh',
-  actionDate: dayjs('2024-08-29T14:39'),
+  id: 32527,
+  action: 'boum',
+  actionDate: dayjs('2024-12-09T01:35'),
   description: '../fake-data/blob/hipster.txt',
 };
 
 export const sampleWithNewData: NewRewardHistory = {
-  action: 'hi',
-  actionDate: dayjs('2024-08-30T02:36'),
+  action: 'quasi sauf',
+  actionDate: dayjs('2024-12-09T04:02'),
   id: null,
 };
 

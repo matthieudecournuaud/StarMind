@@ -1,6 +1,6 @@
 package com.nova.star.domain;
 
-import static com.nova.star.domain.IdeaTestSamples.*;
+import static com.nova.star.domain.RewardHistoryTestSamples.*;
 import static com.nova.star.domain.RewardTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,24 +26,24 @@ class RewardTest {
     }
 
     @Test
-    void ideasTest() {
+    void rewardHistoriesTest() {
         Reward reward = getRewardRandomSampleGenerator();
-        Idea ideaBack = getIdeaRandomSampleGenerator();
+        RewardHistory rewardHistoryBack = getRewardHistoryRandomSampleGenerator();
 
-        reward.addIdeas(ideaBack);
-        assertThat(reward.getIdeas()).containsOnly(ideaBack);
-        assertThat(ideaBack.getReward()).isEqualTo(reward);
+        reward.addRewardHistories(rewardHistoryBack);
+        assertThat(reward.getRewardHistories()).containsOnly(rewardHistoryBack);
+        assertThat(rewardHistoryBack.getReward()).isEqualTo(reward);
 
-        reward.removeIdeas(ideaBack);
-        assertThat(reward.getIdeas()).doesNotContain(ideaBack);
-        assertThat(ideaBack.getReward()).isNull();
+        reward.removeRewardHistories(rewardHistoryBack);
+        assertThat(reward.getRewardHistories()).doesNotContain(rewardHistoryBack);
+        assertThat(rewardHistoryBack.getReward()).isNull();
 
-        reward.ideas(new HashSet<>(Set.of(ideaBack)));
-        assertThat(reward.getIdeas()).containsOnly(ideaBack);
-        assertThat(ideaBack.getReward()).isEqualTo(reward);
+        reward.rewardHistories(new HashSet<>(Set.of(rewardHistoryBack)));
+        assertThat(reward.getRewardHistories()).containsOnly(rewardHistoryBack);
+        assertThat(rewardHistoryBack.getReward()).isEqualTo(reward);
 
-        reward.setIdeas(new HashSet<>());
-        assertThat(reward.getIdeas()).doesNotContain(ideaBack);
-        assertThat(ideaBack.getReward()).isNull();
+        reward.setRewardHistories(new HashSet<>());
+        assertThat(reward.getRewardHistories()).doesNotContain(rewardHistoryBack);
+        assertThat(rewardHistoryBack.getReward()).isNull();
     }
 }

@@ -46,7 +46,7 @@ COPY --from=build /app/target/StarMind.jar ./StarMind.jar
 
 # Définir les variables d'environnement nécessaires
 ENV SPRING_PROFILES_ACTIVE=prod
-ENV SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/starmind
+ENV SPRING_DATASOURCE_URL=jdbc:postgresql://db:5433/starmind
 ENV SPRING_DATASOURCE_USERNAME=postgres
 ENV SPRING_DATASOURCE_PASSWORD=postgres
 

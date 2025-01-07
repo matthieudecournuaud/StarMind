@@ -38,12 +38,15 @@ public class RewardHistory implements Serializable {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "ideas" }, allowSetters = true)
-    private Reward reward;
+    @JsonIgnoreProperties(
+        value = { "comments", "votes", "likeHistories", "author", "assignedReward", "manager", "category" },
+        allowSetters = true
+    )
+    private Idea idea;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "comments", "author", "ideaCategory", "assignedReward", "category", "reward" }, allowSetters = true)
-    private Idea idea;
+    @JsonIgnoreProperties(value = { "rewardHistories" }, allowSetters = true)
+    private Reward reward;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -99,19 +102,6 @@ public class RewardHistory implements Serializable {
         this.description = description;
     }
 
-    public Reward getReward() {
-        return this.reward;
-    }
-
-    public void setReward(Reward reward) {
-        this.reward = reward;
-    }
-
-    public RewardHistory reward(Reward reward) {
-        this.setReward(reward);
-        return this;
-    }
-
     public Idea getIdea() {
         return this.idea;
     }
@@ -122,6 +112,19 @@ public class RewardHistory implements Serializable {
 
     public RewardHistory idea(Idea idea) {
         this.setIdea(idea);
+        return this;
+    }
+
+    public Reward getReward() {
+        return this.reward;
+    }
+
+    public void setReward(Reward reward) {
+        this.reward = reward;
+    }
+
+    public RewardHistory reward(Reward reward) {
+        this.setReward(reward);
         return this;
     }
 

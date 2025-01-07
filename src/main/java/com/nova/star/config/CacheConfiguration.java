@@ -52,17 +52,28 @@ public class CacheConfiguration {
             createCache(cm, com.nova.star.domain.User.class.getName() + ".authorities");
             createCache(cm, com.nova.star.domain.Idea.class.getName());
             createCache(cm, com.nova.star.domain.Idea.class.getName() + ".comments");
+            createCache(cm, com.nova.star.domain.Idea.class.getName() + ".votes");
+            createCache(cm, com.nova.star.domain.Idea.class.getName() + ".likeHistories");
+            createCache(cm, com.nova.star.domain.Comment.class.getName());
             createCache(cm, com.nova.star.domain.Category.class.getName());
             createCache(cm, com.nova.star.domain.Category.class.getName() + ".ideas");
-            createCache(cm, com.nova.star.domain.Category.class.getName() + ".subcategories");
-            createCache(cm, com.nova.star.domain.Comment.class.getName());
             createCache(cm, com.nova.star.domain.Reward.class.getName());
-            createCache(cm, com.nova.star.domain.Reward.class.getName() + ".ideas");
+            createCache(cm, com.nova.star.domain.Reward.class.getName() + ".rewardHistories");
+            createCache(cm, com.nova.star.domain.Vote.class.getName());
             createCache(cm, com.nova.star.domain.IdeaHistory.class.getName());
             createCache(cm, com.nova.star.domain.RewardHistory.class.getName());
             createCache(cm, com.nova.star.domain.LikeHistory.class.getName());
+            createCache(cm, com.nova.star.domain.GlobalChat.class.getName());
+            createCache(cm, com.nova.star.domain.GlobalChat.class.getName() + ".messages");
+            createCache(cm, com.nova.star.domain.GlobalChat.class.getName() + ".users");
+            createCache(cm, com.nova.star.domain.IdeaChat.class.getName());
+            createCache(cm, com.nova.star.domain.IdeaChat.class.getName() + ".messages");
+            createCache(cm, com.nova.star.domain.IdeaChat.class.getName() + ".users");
+            createCache(cm, com.nova.star.domain.ChatMessage.class.getName());
+            createCache(cm, com.nova.star.domain.ProspectBoard.class.getName());
+            createCache(cm, com.nova.star.domain.ProspectBoard.class.getName() + ".entries");
+            createCache(cm, com.nova.star.domain.ProspectEntry.class.getName());
             createCache(cm, com.nova.star.domain.Notification.class.getName());
-            createCache(cm, com.nova.star.domain.Attachment.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

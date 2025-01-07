@@ -42,6 +42,10 @@ public class Idea implements Serializable {
     @Column(name = "status", nullable = false)
     private IdeaStatus status;
 
+    @NotNull
+    @Column(name = "is_confidential", nullable = false)
+    private Boolean isConfidential;
+
     @Column(name = "validation")
     private Boolean validation;
 
@@ -50,7 +54,7 @@ public class Idea implements Serializable {
     private RewardType rewardType;
 
     @Column(name = "likes")
-    private String likes;
+    private Integer likes;
 
     @Column(name = "created_date")
     private ZonedDateTime createdDate;
@@ -58,29 +62,40 @@ public class Idea implements Serializable {
     @Column(name = "modified_date")
     private ZonedDateTime modifiedDate;
 
+    @Column(name = "is_public")
+    private Boolean isPublic;
+
+    @Column(name = "impact")
+    private String impact;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "idea")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "relatedIdea", "author", "idea" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "author", "idea" }, allowSetters = true)
     private Set<Comment> comments = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "idea")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "voter", "idea" }, allowSetters = true)
+    private Set<Vote> votes = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "idea")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "idea" }, allowSetters = true)
+    private Set<LikeHistory> likeHistories = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "ideas", "subcategories", "parentCategory", "superCategory" }, allowSetters = true)
-    private Category ideaCategory;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "ideas" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "rewardHistories" }, allowSetters = true)
     private Reward assignedReward;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "ideas", "subcategories", "parentCategory", "superCategory" }, allowSetters = true)
-    private Category category;
+    private User manager;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = { "ideas" }, allowSetters = true)
-    private Reward reward;
+    private Category category;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -136,6 +151,19 @@ public class Idea implements Serializable {
         this.status = status;
     }
 
+    public Boolean getIsConfidential() {
+        return this.isConfidential;
+    }
+
+    public Idea isConfidential(Boolean isConfidential) {
+        this.setIsConfidential(isConfidential);
+        return this;
+    }
+
+    public void setIsConfidential(Boolean isConfidential) {
+        this.isConfidential = isConfidential;
+    }
+
     public Boolean getValidation() {
         return this.validation;
     }
@@ -162,16 +190,16 @@ public class Idea implements Serializable {
         this.rewardType = rewardType;
     }
 
-    public String getLikes() {
+    public Integer getLikes() {
         return this.likes;
     }
 
-    public Idea likes(String likes) {
+    public Idea likes(Integer likes) {
         this.setLikes(likes);
         return this;
     }
 
-    public void setLikes(String likes) {
+    public void setLikes(Integer likes) {
         this.likes = likes;
     }
 
@@ -199,6 +227,32 @@ public class Idea implements Serializable {
 
     public void setModifiedDate(ZonedDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public Boolean getIsPublic() {
+        return this.isPublic;
+    }
+
+    public Idea isPublic(Boolean isPublic) {
+        this.setIsPublic(isPublic);
+        return this;
+    }
+
+    public void setIsPublic(Boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
+    public String getImpact() {
+        return this.impact;
+    }
+
+    public Idea impact(String impact) {
+        this.setImpact(impact);
+        return this;
+    }
+
+    public void setImpact(String impact) {
+        this.impact = impact;
     }
 
     public Set<Comment> getComments() {
@@ -232,6 +286,68 @@ public class Idea implements Serializable {
         return this;
     }
 
+    public Set<Vote> getVotes() {
+        return this.votes;
+    }
+
+    public void setVotes(Set<Vote> votes) {
+        if (this.votes != null) {
+            this.votes.forEach(i -> i.setIdea(null));
+        }
+        if (votes != null) {
+            votes.forEach(i -> i.setIdea(this));
+        }
+        this.votes = votes;
+    }
+
+    public Idea votes(Set<Vote> votes) {
+        this.setVotes(votes);
+        return this;
+    }
+
+    public Idea addVotes(Vote vote) {
+        this.votes.add(vote);
+        vote.setIdea(this);
+        return this;
+    }
+
+    public Idea removeVotes(Vote vote) {
+        this.votes.remove(vote);
+        vote.setIdea(null);
+        return this;
+    }
+
+    public Set<LikeHistory> getLikeHistories() {
+        return this.likeHistories;
+    }
+
+    public void setLikeHistories(Set<LikeHistory> likeHistories) {
+        if (this.likeHistories != null) {
+            this.likeHistories.forEach(i -> i.setIdea(null));
+        }
+        if (likeHistories != null) {
+            likeHistories.forEach(i -> i.setIdea(this));
+        }
+        this.likeHistories = likeHistories;
+    }
+
+    public Idea likeHistories(Set<LikeHistory> likeHistories) {
+        this.setLikeHistories(likeHistories);
+        return this;
+    }
+
+    public Idea addLikeHistories(LikeHistory likeHistory) {
+        this.likeHistories.add(likeHistory);
+        likeHistory.setIdea(this);
+        return this;
+    }
+
+    public Idea removeLikeHistories(LikeHistory likeHistory) {
+        this.likeHistories.remove(likeHistory);
+        likeHistory.setIdea(null);
+        return this;
+    }
+
     public User getAuthor() {
         return this.author;
     }
@@ -242,19 +358,6 @@ public class Idea implements Serializable {
 
     public Idea author(User user) {
         this.setAuthor(user);
-        return this;
-    }
-
-    public Category getIdeaCategory() {
-        return this.ideaCategory;
-    }
-
-    public void setIdeaCategory(Category category) {
-        this.ideaCategory = category;
-    }
-
-    public Idea ideaCategory(Category category) {
-        this.setIdeaCategory(category);
         return this;
     }
 
@@ -271,6 +374,19 @@ public class Idea implements Serializable {
         return this;
     }
 
+    public User getManager() {
+        return this.manager;
+    }
+
+    public void setManager(User user) {
+        this.manager = user;
+    }
+
+    public Idea manager(User user) {
+        this.setManager(user);
+        return this;
+    }
+
     public Category getCategory() {
         return this.category;
     }
@@ -281,19 +397,6 @@ public class Idea implements Serializable {
 
     public Idea category(Category category) {
         this.setCategory(category);
-        return this;
-    }
-
-    public Reward getReward() {
-        return this.reward;
-    }
-
-    public void setReward(Reward reward) {
-        this.reward = reward;
-    }
-
-    public Idea reward(Reward reward) {
-        this.setReward(reward);
         return this;
     }
 
@@ -324,11 +427,14 @@ public class Idea implements Serializable {
             ", title='" + getTitle() + "'" +
             ", description='" + getDescription() + "'" +
             ", status='" + getStatus() + "'" +
+            ", isConfidential='" + getIsConfidential() + "'" +
             ", validation='" + getValidation() + "'" +
             ", rewardType='" + getRewardType() + "'" +
-            ", likes='" + getLikes() + "'" +
+            ", likes=" + getLikes() +
             ", createdDate='" + getCreatedDate() + "'" +
             ", modifiedDate='" + getModifiedDate() + "'" +
+            ", isPublic='" + getIsPublic() + "'" +
+            ", impact='" + getImpact() + "'" +
             "}";
     }
 }

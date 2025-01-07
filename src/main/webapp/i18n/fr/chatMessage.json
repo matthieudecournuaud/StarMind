@@ -1,0 +1,29 @@
+{
+  "starMindApp": {
+    "chatMessage": {
+      "home": {
+        "title": "ChatMessages",
+        "refreshListLabel": "Actualiser la liste",
+        "createLabel": "Créer un nouveau Chat Message",
+        "createOrEditLabel": "Créer ou éditer un Chat Message",
+        "notFound": "Aucun Chat Message trouvé"
+      },
+      "created": "Un nouveau Chat Message a été créé avec l'identifiant {{ param }}",
+      "updated": "Le Chat Message avec l'identifiant {{ param }} a été mis à jour",
+      "deleted": "Le Chat Message avec l'identifiant {{ param }} a été supprimé",
+      "delete": {
+        "question": "Êtes-vous certain de vouloir supprimer le Chat Message {{ id }} ?"
+      },
+      "detail": {
+        "title": "Chat Message"
+      },
+      "id": "ID",
+      "message": "Message",
+      "createdDate": "Created Date",
+      "likeCount": "Like Count",
+      "author": "Author",
+      "globalChat": "Global Chat",
+      "ideaChat": "Idea Chat"
+    }
+  }
+}

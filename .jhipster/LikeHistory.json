@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20240830123918"
+    "changelogDate": "20241209143956"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "action",
@@ -16,11 +17,11 @@
     },
     {
       "fieldName": "oldLikes",
-      "fieldType": "String"
+      "fieldType": "Integer"
     },
     {
       "fieldName": "newLikes",
-      "fieldType": "String"
+      "fieldType": "Integer"
     }
   ],
   "name": "LikeHistory",
@@ -28,10 +29,12 @@
   "relationships": [
     {
       "otherEntityName": "idea",
+      "otherEntityRelationshipName": "likeHistories",
       "relationshipName": "idea",
-      "relationshipSide": "left",
+      "relationshipSide": "right",
       "relationshipType": "many-to-one"
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }

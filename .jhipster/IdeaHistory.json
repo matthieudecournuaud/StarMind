@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20240830123916"
+    "changelogDate": "20241209143954"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "action",
@@ -16,17 +17,16 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldType": "TextBlob"
     },
     {
       "fieldName": "rewardType",
       "fieldType": "RewardType",
-      "fieldValues": "BRONZE,ARGENT,OR,PLATINE,DIAMANT,TITANIUM,STARMIND"
+      "fieldValues": "BRONZE,ARGENT,OR,PLATINE,DIAMANT,TITANIUM,ELYSIUM"
     },
     {
       "fieldName": "likes",
-      "fieldType": "String"
+      "fieldType": "Integer"
     }
   ],
   "name": "IdeaHistory",
@@ -39,5 +39,6 @@
       "relationshipType": "many-to-one"
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }

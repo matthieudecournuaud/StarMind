@@ -1,92 +1,109 @@
+// Enumérations
 enum IdeaStatus {
-  OPEN, IN_PROGRESS, COMPLETED
+    OPEN, IN_PROGRESS, COMPLETED, APPROVED, REJECTED, PUBLISHED, IN_VOTING, MANAGER_REVIEW
 }
-
 enum RewardType {
-  BRONZE, ARGENT, OR, PLATINE, DIAMANT, TITANIUM, STARMIND
+    BRONZE, ARGENT, OR, PLATINE, DIAMANT, TITANIUM, ELYSIUM
 }
-
+enum ProspectStatus {
+    NEW, CONTACTED, INTERVIEW_SCHEDULED, HIRED, REJECTED
+}
+enum VoteOption {
+    POUR, CONTRE, NEUTRE
+}
+// Entités
 entity Idea {
-  title String required,
-  description TextBlob required,
-  status IdeaStatus required,
-  validation Boolean,
-  rewardType RewardType,
-  likes String,
-  createdDate ZonedDateTime,
-  modifiedDate ZonedDateTime
+    title String required,
+    description TextBlob required,
+    status IdeaStatus required,
+    isConfidential Boolean required,
+    validation Boolean,
+    rewardType RewardType,
+    likes Integer,
+    createdDate ZonedDateTime,
+    modifiedDate ZonedDateTime,
+    isPublic Boolean,
+    impact String
 }
-
-entity Category {
-  name String required,
-  description TextBlob,
-  level String required
-}
-
 entity Comment {
-  content TextBlob required,
-  createdDate ZonedDateTime
+    content TextBlob required,
+    createdDate ZonedDateTime
 }
-
+entity Category {
+    name String required,
+    description TextBlob,
+    level String
+}
 entity Reward {
-  name String required,
-  description String
+    name String required,
+    description String
 }
-
+entity Vote {
+    voteOption VoteOption required,
+    comment TextBlob,
+    createdDate ZonedDateTime required
+}
 entity IdeaHistory {
-  action String required,
-  actionDate ZonedDateTime required,
-  description TextBlob,
-  rewardType RewardType,
-  likes String
+    action String required,
+    actionDate ZonedDateTime required,
+    description TextBlob,
+    rewardType RewardType,
+    likes Integer
 }
-
 entity RewardHistory {
-  action String required,
-  actionDate ZonedDateTime required,
-  description TextBlob
+    action String required,
+    actionDate ZonedDateTime required,
+    description TextBlob
 }
-
 entity LikeHistory {
-  action String required,
-  actionDate ZonedDateTime required,
-  oldLikes String,
-  newLikes String
+    action String required,
+    actionDate ZonedDateTime required,
+    oldLikes Integer,
+    newLikes Integer
 }
-
+entity GlobalChat {
+    name String required
+}
+entity IdeaChat {
+    name String required
+}
+entity ChatMessage {
+    message TextBlob required,
+    createdDate ZonedDateTime required,
+    likeCount Integer
+}
+entity ProspectBoard {
+    name String required,
+    description TextBlob,
+    createdDate ZonedDateTime required,
+    modifiedDate ZonedDateTime required
+}
+entity ProspectEntry {
+    status ProspectStatus required,
+    createdDate ZonedDateTime required,
+    modifiedDate ZonedDateTime required
+}
 entity Notification {
-  message String required,
-  type String required,
-  sentDate ZonedDateTime required,
-  read Boolean
+    message String required,
+    type String required,
+    sentDate ZonedDateTime required,
+    read Boolean
 }
-
-entity Attachment {
-  fileName String required,
-  fileType String required,
-  data Blob required
-}
-
-relationship ManyToOne {
-  Idea{author} to User with builtInEntity,  // Ajout de with builtInEntity
-  Idea{ideaCategory} to Category,
-  Idea{assignedReward} to Reward,
-  Comment{relatedIdea} to Idea,
-  Comment{author} to User with builtInEntity,  // Ajout de with builtInEntity
-  IdeaHistory{idea} to Idea,
-  RewardHistory{reward} to Reward,
-  RewardHistory{idea} to Idea,
-  LikeHistory{idea} to Idea,
-  Category{parentCategory} to Category,
-  Notification{user} to User with builtInEntity,  // Ajout de with builtInEntity
-  Attachment{relatedIdea} to Idea
-}
-
+// Relations OneToMany
 relationship OneToMany {
-  Category{ideas} to Idea,
-  Category{subcategories} to Category{superCategory},
-  Reward{ideas} to Idea,
-  Idea{comments} to Comment
+    Idea{comments} to Comment{idea} , Idea{votes} to Vote{idea} , Idea{likeHistories} to LikeHistory{idea} , Category{ideas} to Idea{category} , Reward{rewardHistories} to RewardHistory{reward} , GlobalChat{messages} to ChatMessage , IdeaChat{messages} to ChatMessage , ProspectBoard{entries} to ProspectEntry
 }
-
-paginate Idea, Category, Comment, Reward, IdeaHistory, RewardHistory, LikeHistory with infinite-scroll
+// Relations ManyToOne
+relationship ManyToOne {
+    Idea{author} to User with builtInEntity , Idea{assignedReward} to Reward , Idea{manager} to User with builtInEntity , Comment{author} to User with builtInEntity , Vote{voter} to User with builtInEntity , IdeaHistory{idea} to Idea , RewardHistory{idea} to Idea , ChatMessage{author} to User with builtInEntity , ProspectBoard{owner} to User with builtInEntity , ProspectEntry{prospect} to User with builtInEntity , Notification{user} to User with builtInEntity
+}
+// Relations ManyToMany
+relationship ManyToMany {
+    GlobalChat{users} to User{globalChats} with builtInEntity , IdeaChat{users} to User{ideaChats} with builtInEntity
+}
+// Pagination
+paginate Idea, Category, Comment, Reward, IdeaHistory, RewardHistory, LikeHistory, ChatMessage, GlobalChat, IdeaChat, ProspectBoard, ProspectEntry with infinite-scroll
+// DTO Protection
+dto Idea, Comment, Reward, RewardHistory, IdeaHistory, Notification, ChatMessage, ProspectEntry, GlobalChat, IdeaChat, ProspectBoard, Category, Vote, LikeHistory with mapstruct
+// Services
+service Idea, Comment, Reward, RewardHistory, IdeaHistory, Notification, ChatMessage, ProspectEntry, GlobalChat, IdeaChat, ProspectBoard, Category, Vote, LikeHistory with serviceClass

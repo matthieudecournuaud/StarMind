@@ -2,7 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import SharedModule from 'app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -24,8 +24,6 @@ export class CategoryUpdateComponent implements OnInit {
   isSaving = false;
   category: ICategory | null = null;
 
-  categoriesSharedCollection: ICategory[] = [];
-
   protected dataUtils = inject(DataUtils);
   protected eventManager = inject(EventManager);
   protected categoryService = inject(CategoryService);
@@ -35,16 +33,12 @@ export class CategoryUpdateComponent implements OnInit {
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: CategoryFormGroup = this.categoryFormService.createCategoryFormGroup();
 
-  compareCategory = (o1: ICategory | null, o2: ICategory | null): boolean => this.categoryService.compareCategory(o1, o2);
-
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ category }) => {
       this.category = category;
       if (category) {
         this.updateForm(category);
       }
-
-      this.loadRelationshipsOptions();
     });
   }
 
@@ -99,27 +93,5 @@ export class CategoryUpdateComponent implements OnInit {
   protected updateForm(category: ICategory): void {
     this.category = category;
     this.categoryFormService.resetForm(this.editForm, category);
-
-    this.categoriesSharedCollection = this.categoryService.addCategoryToCollectionIfMissing<ICategory>(
-      this.categoriesSharedCollection,
-      category.parentCategory,
-      category.superCategory,
-    );
-  }
-
-  protected loadRelationshipsOptions(): void {
-    this.categoryService
-      .query()
-      .pipe(map((res: HttpResponse<ICategory[]>) => res.body ?? []))
-      .pipe(
-        map((categories: ICategory[]) =>
-          this.categoryService.addCategoryToCollectionIfMissing<ICategory>(
-            categories,
-            this.category?.parentCategory,
-            this.category?.superCategory,
-          ),
-        ),
-      )
-      .subscribe((categories: ICategory[]) => (this.categoriesSharedCollection = categories));
   }
 }

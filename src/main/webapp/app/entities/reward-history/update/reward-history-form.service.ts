@@ -34,8 +34,8 @@ type RewardHistoryFormGroupContent = {
   action: FormControl<RewardHistoryFormRawValue['action']>;
   actionDate: FormControl<RewardHistoryFormRawValue['actionDate']>;
   description: FormControl<RewardHistoryFormRawValue['description']>;
-  reward: FormControl<RewardHistoryFormRawValue['reward']>;
   idea: FormControl<RewardHistoryFormRawValue['idea']>;
+  reward: FormControl<RewardHistoryFormRawValue['reward']>;
 };
 
 export type RewardHistoryFormGroup = FormGroup<RewardHistoryFormGroupContent>;
@@ -62,8 +62,8 @@ export class RewardHistoryFormService {
         validators: [Validators.required],
       }),
       description: new FormControl(rewardHistoryRawValue.description),
-      reward: new FormControl(rewardHistoryRawValue.reward),
       idea: new FormControl(rewardHistoryRawValue.idea),
+      reward: new FormControl(rewardHistoryRawValue.reward),
     });
   }
 

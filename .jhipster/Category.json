@@ -1,8 +1,9 @@
 {
   "annotations": {
-    "changelogDate": "20240830123913"
+    "changelogDate": "20241209143951"
   },
   "applications": "*",
+  "dto": "mapstruct",
   "fields": [
     {
       "fieldName": "name",
@@ -11,13 +12,11 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldType": "TextBlob"
     },
     {
       "fieldName": "level",
-      "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldType": "String"
     }
   ],
   "name": "Category",
@@ -25,30 +24,12 @@
   "relationships": [
     {
       "otherEntityName": "idea",
+      "otherEntityRelationshipName": "category",
       "relationshipName": "ideas",
       "relationshipSide": "left",
       "relationshipType": "one-to-many"
-    },
-    {
-      "otherEntityName": "category",
-      "otherEntityRelationshipName": "superCategory",
-      "relationshipName": "subcategories",
-      "relationshipSide": "left",
-      "relationshipType": "one-to-many"
-    },
-    {
-      "otherEntityName": "category",
-      "relationshipName": "parentCategory",
-      "relationshipSide": "left",
-      "relationshipType": "many-to-one"
-    },
-    {
-      "otherEntityName": "category",
-      "otherEntityRelationshipName": "subcategories",
-      "relationshipName": "superCategory",
-      "relationshipSide": "right",
-      "relationshipType": "many-to-one"
     }
   ],
-  "searchEngine": "no"
+  "searchEngine": "no",
+  "service": "serviceClass"
 }
