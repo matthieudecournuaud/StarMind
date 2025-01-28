@@ -139,17 +139,6 @@ spring:
   mvc:
     problemdetails:
       enabled: true
-  security:
-    oauth2:
-      client:
-        provider:
-          oidc:
-            issuer-uri: https://dev-25887789.okta.com/oauth2/default
-        registration:
-          oidc:
-            client-id: web_app
-            client-secret: web_app
-            scope: openid, profile, email, offline_access # last one for refresh tokens
   task:
     execution:
       thread-name-prefix: star-mind-task-

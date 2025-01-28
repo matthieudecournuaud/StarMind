@@ -2,6 +2,7 @@ package com.nova.star;
 
 import com.nova.star.config.ApplicationProperties;
 import com.nova.star.config.CRLFLogConverter;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -34,9 +35,11 @@ public class StarMindApp {
     /**
      * Initializes StarMind.
      * <p>
-     * Spring profiles can be configured with a program argument --spring.profiles.active=your-active-profile
+     * Spring profiles can be configured with a program argument
+     * --spring.profiles.active=your-active-profile
      * <p>
-     * You can find more information on how profiles work with JHipster on <a href="https://www.jhipster.tech/profiles/">https://www.jhipster.tech/profiles/</a>.
+     * You can find more information on how profiles work with JHipster on <a href=
+     * "https://www.jhipster.tech/profiles/">https://www.jhipster.tech/profiles/</a>.
      */
     @PostConstruct
     public void initApplication() {
@@ -65,6 +68,14 @@ public class StarMindApp {
      * @param args the command line arguments.
      */
     public static void main(String[] args) {
+        Dotenv dotenv = Dotenv.configure().directory("src/main/resources/config").filename(".env.dev").load();
+
+        System.setProperty("SPRING_PROFILES_ACTIVE", dotenv.get("SPRING_PROFILES_ACTIVE"));
+        System.setProperty(
+            "SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID",
+            dotenv.get("SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID")
+        );
+
         SpringApplication app = new SpringApplication(StarMindApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();

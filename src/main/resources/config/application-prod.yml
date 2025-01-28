@@ -26,6 +26,8 @@ management:
         enabled: false
 
 spring:
+  profiles:
+    active: prod
   devtools:
     restart:
       enabled: false
@@ -33,17 +35,31 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/StarMind
-    username: StarMind
-    password: StarMind
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     hikari:
       poolName: Hikari
       auto-commit: false
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     enabled: true
-    change-log: classpath:config/liquibase/master.xml
+    url: ${SPRING_LIQUIBASE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    change-log: classpath:config/liquibase/changelog/master.xml
     contexts: prod, faker
+  security:
+    oauth2:
+      client:
+        provider:
+          oidc:
+            issuer-uri: ${SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI}
+        registration:
+          oidc:
+            scope: openid, profile, email
+            client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID}
+            authorization-grant-type: authorization_code
   thymeleaf:
     cache: true
 

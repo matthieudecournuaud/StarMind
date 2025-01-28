@@ -82,23 +82,27 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authz ->
                 // prettier-ignore
                 authz
-                    .requestMatchers(mvc.pattern("/index.html"), mvc.pattern("/*.js"), mvc.pattern("/*.txt"), mvc.pattern("/*.json"), mvc.pattern("/*.map"), mvc.pattern("/*.css")).permitAll()
-                    .requestMatchers(mvc.pattern("/*.ico"), mvc.pattern("/*.png"), mvc.pattern("/*.svg"), mvc.pattern("/*.webapp")).permitAll()
-                    .requestMatchers(mvc.pattern("/app/**")).permitAll()
-                    .requestMatchers(mvc.pattern("/i18n/**")).permitAll()
-                    .requestMatchers(mvc.pattern("/content/**")).permitAll()
-                    .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
-                    .requestMatchers(mvc.pattern("/api/authenticate")).permitAll()
-                    .requestMatchers(mvc.pattern("/api/auth-info")).permitAll()
-                    .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
-                    .requestMatchers(mvc.pattern("/api/**")).authenticated()
-                    .requestMatchers(mvc.pattern("/websocket/**")).authenticated()
-                    .requestMatchers(mvc.pattern("/v3/api-docs/**")).hasAuthority(AuthoritiesConstants.ADMIN)
-                    .requestMatchers(mvc.pattern("/management/health")).permitAll()
-                    .requestMatchers(mvc.pattern("/management/health/**")).permitAll()
-                    .requestMatchers(mvc.pattern("/management/info")).permitAll()
-                    .requestMatchers(mvc.pattern("/management/prometheus")).permitAll()
-                    .requestMatchers(mvc.pattern("/management/**")).hasAuthority(AuthoritiesConstants.ADMIN)
+                        .requestMatchers(mvc.pattern("/index.html"), mvc.pattern("/*.js"), mvc.pattern("/*.txt"),
+                                mvc.pattern("/*.json"), mvc.pattern("/*.map"), mvc.pattern("/*.css"))
+                        .permitAll()
+                        .requestMatchers(mvc.pattern("/*.ico"), mvc.pattern("/*.png"), mvc.pattern("/*.svg"),
+                                mvc.pattern("/*.webapp"))
+                        .permitAll()
+                        .requestMatchers(mvc.pattern("/app/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/i18n/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/content/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/swagger-ui/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/api/authenticate")).permitAll()
+                        .requestMatchers(mvc.pattern("/api/auth-info")).permitAll()
+                        .requestMatchers(mvc.pattern("/api/admin/**")).hasAuthority(AuthoritiesConstants.ADMIN)
+                        .requestMatchers(mvc.pattern("/api/**")).authenticated()
+                        .requestMatchers(mvc.pattern("/websocket/**")).authenticated()
+                        .requestMatchers(mvc.pattern("/v3/api-docs/**")).hasAuthority(AuthoritiesConstants.ADMIN)
+                        .requestMatchers(mvc.pattern("/management/health")).permitAll()
+                        .requestMatchers(mvc.pattern("/management/health/**")).permitAll()
+                        .requestMatchers(mvc.pattern("/management/info")).permitAll()
+                        .requestMatchers(mvc.pattern("/management/prometheus")).permitAll()
+                        .requestMatchers(mvc.pattern("/management/**")).hasAuthority(AuthoritiesConstants.ADMIN)
             )
             .oauth2Login(oauth2 -> oauth2.loginPage("/").userInfoEndpoint(userInfo -> userInfo.oidcUserService(this.oidcUserService())))
             .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt.jwtAuthenticationConverter(authenticationConverter())))
@@ -138,7 +142,7 @@ public class SecurityConfiguration {
      * Map authorities from "groups" or "roles" claim in ID Token.
      *
      * @return a {@link GrantedAuthoritiesMapper} that maps groups from
-     * the IdP to Spring Security Authorities.
+     *         the IdP to Spring Security Authorities.
      */
     @Bean
     public GrantedAuthoritiesMapper userAuthoritiesMapper() {
@@ -176,9 +180,14 @@ public class SecurityConfiguration {
     /**
      * Custom CSRF handler to provide BREACH protection.
      *
-     * @see <a href="https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html#csrf-integration-javascript-spa">Spring Security Documentation - Integrating with CSRF Protection</a>
-     * @see <a href="https://github.com/jhipster/generator-jhipster/pull/25907">JHipster - use customized SpaCsrfTokenRequestHandler to handle CSRF token</a>
-     * @see <a href="https://stackoverflow.com/q/74447118/65681">CSRF protection not working with Spring Security 6</a>
+     * @see <a href=
+     *      "https://docs.spring.io/spring-security/reference/servlet/exploits/csrf.html#csrf-integration-javascript-spa">Spring
+     *      Security Documentation - Integrating with CSRF Protection</a>
+     * @see <a href=
+     *      "https://github.com/jhipster/generator-jhipster/pull/25907">JHipster -
+     *      use customized SpaCsrfTokenRequestHandler to handle CSRF token</a>
+     * @see <a href="https://stackoverflow.com/q/74447118/65681">CSRF protection not
+     *      working with Spring Security 6</a>
      */
     static final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
 
@@ -187,7 +196,8 @@ public class SecurityConfiguration {
         @Override
         public void handle(HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> csrfToken) {
             /*
-             * Always use XorCsrfTokenRequestAttributeHandler to provide BREACH protection of
+             * Always use XorCsrfTokenRequestAttributeHandler to provide BREACH protection
+             * of
              * the CsrfToken when it is rendered in the response body.
              */
             this.delegate.handle(request, response, csrfToken);
@@ -196,9 +206,12 @@ public class SecurityConfiguration {
         @Override
         public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
             /*
-             * If the request contains a request header, use CsrfTokenRequestAttributeHandler
-             * to resolve the CsrfToken. This applies when a single-page application includes
-             * the header value automatically, which was obtained via a cookie containing the
+             * If the request contains a request header, use
+             * CsrfTokenRequestAttributeHandler
+             * to resolve the CsrfToken. This applies when a single-page application
+             * includes
+             * the header value automatically, which was obtained via a cookie containing
+             * the
              * raw CsrfToken.
              */
             if (StringUtils.hasText(request.getHeader(csrfToken.getHeaderName()))) {

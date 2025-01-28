@@ -151,3 +151,9 @@ Desktop.ini
 ######################
 /coverage/
 /.nyc_output/
+
+######################
+# env prod
+######################
+.env
+.okta.env

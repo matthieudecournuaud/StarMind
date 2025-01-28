@@ -57,7 +57,7 @@ public class LiquibaseConfiguration {
                 dataSourceProperties
             );
         }
-        liquibase.setChangeLog("classpath:config/liquibase/master.xml");
+        liquibase.setChangeLog("classpath:config/liquibase/changelog/master.xml");
         liquibase.setContexts(liquibaseProperties.getContexts());
         liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
         liquibase.setLiquibaseSchema(liquibaseProperties.getLiquibaseSchema());

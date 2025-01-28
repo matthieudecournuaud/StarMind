@@ -2,16 +2,20 @@
 name: starmind
 services:
   app:
+    container_name: StarMind-backend
     image: starmind
+    env_file:
+      - ../resources/config/.env.${SPRING_PROFILES_ACTIVE}
     environment:
       - _JAVA_OPTIONS=-Xmx512m -Xms256m
-      - SPRING_PROFILES_ACTIVE=dev,api-docs
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:dev,api-docs}
       - MANAGEMENT_PROMETHEUS_METRICS_EXPORT_ENABLED=false
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/StarMind
-      - SPRING_LIQUIBASE_URL=jdbc:postgresql://postgresql:5432/StarMind
+      - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME:admin}
+      - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD:admin}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/StarMind
+      - SPRING_LIQUIBASE_URL=jdbc:postgresql://localhost:5432/StarMind
       - SPRING_SECURITY_OAUTH2_CLIENT_PROVIDER_OIDC_ISSUER_URI=https://dev-25887789.okta.com/oauth2/default
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=0oajbmuygeEoKopRv5d7
-      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET=bmZUNZCRGC9W06wSDb3V3QJ6aAbWh7iw
+      - SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID=${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID:dev-client-id}
     ports:
       - 127.0.0.1:8080:8080
     healthcheck:
@@ -27,13 +31,27 @@ services:
       postgresql:
         condition: service_healthy
   postgresql:
+    container_name: starmind-database
     image: postgres:latest
+    profiles:
+      - prod
     environment:
-      POSTGRES_USER: StarMind
-      POSTGRES_PASSWORD: StarMind
-      POSTGRES_DB: StarMind
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=StarMind
     ports:
       - '5432:5432'
     extends:
       file: ./postgresql.yml
       service: postgresql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $POSTGRES_USER']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - starmind_default
+
+networks:
+  starmind_default:
+    external: true

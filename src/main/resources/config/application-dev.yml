@@ -19,8 +19,25 @@ logging:
     tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
     com.nova.star: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
 
 spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          oidc:
+            issuer-uri: https://dev-25887789.okta.com/oauth2/default
+        registration:
+          oidc:
+            scope: openid, profile, email, offline_access
+            client-id: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_ID}
+            client-secret: ${SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_OIDC_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: '{baseUrl}/login/oauth2/code/{registrationId}'
+            client-authentication-method: none
+
   devtools:
     restart:
       enabled: true
@@ -33,15 +50,16 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://localhost:5432/StarMind
-    username: StarMind
-    password: StarMind
+    username: admin
+    password: admin
     hikari:
       poolName: Hikari
       auto-commit: false
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     enabled: true
-    change-log: classpath:config/liquibase/master.xml
+    url: jdbc:postgresql://localhost:5432/StarMind
+    change-log: classpath:config/liquibase/changelog/master.xml
     contexts: dev, faker
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
@@ -67,7 +85,7 @@ jhipster:
   # CORS is only enabled by default with the "dev" profile
   cors:
     # Allow Ionic for JHipster by default (* no longer allowed in Spring Boot 2.4+)
-    allowed-origins: 'http://localhost:8100,https://localhost:8100,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200'
+    allowed-origins: 'http://localhost:8100,https://localhost:8100,http://localhost:8080,https://localhost:8080http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200'
     # Enable CORS when running in GitHub Codespaces
     allowed-origin-patterns: 'https://*.githubpreview.dev'
     allowed-methods: '*'
