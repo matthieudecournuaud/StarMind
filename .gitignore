@@ -155,5 +155,12 @@ Desktop.ini
 ######################
 # env prod
 ######################
-.env
+.env.prod
 .okta.env
+.env
+######################
+# env dev
+######################
+.env.dev
+.okta.env
+.env
